@@ -1,4 +1,4 @@
-import { add, differenceInMinutes } from 'date-fns';
+import { add, differenceInMinutes, startOfToday } from 'date-fns';
 import { MutableRefObject } from 'react';
 import { JSONArray, JSONObject } from 'superjson/dist/types';
 
@@ -29,10 +29,24 @@ export const getMinutesFromString = (time: string) => {
   }
   return 0;
 };
+
 type Time = {
   hours: number;
   minutes: number;
   seconds: number;
+};
+
+export const parseDateFromString = (date: Date, time: string) => {
+  if (time != undefined) {
+    let [hours, minutes, seconds] = time.split(':');
+
+    if (!seconds) seconds = '00';
+    if (!minutes) minutes = '00';
+    if (!hours) hours = '00';
+
+    return addTimeToDate(date, `${hours}:${minutes}:${seconds}`);
+  }
+  return 0;
 };
 
 export const parseTimeFromString = (time: string): Time => {
@@ -53,16 +67,6 @@ export const parseTimeFromString = (time: string): Time => {
   return { hours: 0, minutes: 0, seconds: 0 };
 };
 
-export const isCurrentTimeWithin30minutesOfStartTime = (startTime: Date | undefined) => {
-  if (startTime) {
-    const currentTime = new Date();
-    const diffMinutes = Math.floor(differenceInMinutes(currentTime, startTime));
-    console.log(diffMinutes);
-    return diffMinutes <= 30;
-  }
-  return false;
-};
-
 export const addTimeToDate = (date: Date, time: string): Date => {
   return add(date, {
     hours: parseTimeFromString(time).hours,
@@ -78,4 +82,43 @@ export const toggleClasses = (ref: MutableRefObject<any>, id: number, classes: s
 
 export const classNames = (...classes: any[]) => {
   return classes.filter(Boolean).join(' ');
+};
+
+// CHECKERS
+
+export const isCurrentTimeWithin30minutesOfStartTime = (startTime: Date | undefined) => {
+  if (startTime) {
+    const currentTime = new Date();
+    const diffMinutes = Math.floor(differenceInMinutes(currentTime, startTime));
+    console.log(diffMinutes);
+    return diffMinutes <= 30;
+  }
+  return false;
+};
+
+export const withinFirst30Mins = (startTime: Date | undefined) => {
+  if (startTime) {
+    const currentTime = new Date();
+    const diffMinutes = Math.floor(differenceInMinutes(currentTime, startTime));
+    return diffMinutes <= 30;
+  }
+  return false;
+};
+
+export const withinLast30Mins = (endTime: Date | undefined) => {
+  if (endTime) {
+    const currentTime = new Date();
+    const diffMinutes = Math.floor(differenceInMinutes(currentTime, endTime));
+    return diffMinutes >= -30;
+  }
+  return false;
+};
+
+export const within30MinsBreak = (lastBreakTime: Date | undefined) => {
+  if (lastBreakTime) {
+    const currentTime = new Date();
+    const diffMinutes = Math.floor(differenceInMinutes(currentTime, lastBreakTime));
+    return diffMinutes >= -30 && diffMinutes <= 30;
+  }
+  return false;
 };

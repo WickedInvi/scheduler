@@ -8,6 +8,8 @@ import {
   parseTimeFromString,
   isCurrentTimeWithin30minutesOfStartTime,
   addTimeToDate,
+  withinFirst30Mins,
+  parseDateFromString,
 } from './helpers';
 
 import { schedule } from './workTimes';
@@ -41,9 +43,17 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   const lastBreakTimerRef = useRef<any>(null);
 
   // TODAY WORK TIMES
-  const todayWorkTimes = schedule.workTimes.filter((workTime) => isSameDay(workTime.date, today));
-  const todayStartTime = todayWorkTimes[0]?.start;
-  const todayEndTime = todayWorkTimes[0]?.end;
+  // const todayWorkTimes = schedule.workTimes.filter((workTime) => isSameDay(workTime.date, today));
+  type WorkTime = {
+    date: Date;
+    start: string;
+    end: string;
+    dayOff: boolean;
+  };
+
+  const todayWorkTimes: WorkTime | undefined = schedule.workTimes.filter((workTime) => isSameDay(workTime.date, today))[0];
+  const todayStartTime = parseDateFromString(today, todayWorkTimes?.start);
+  const todayEndTime = parseDateFromString(today, todayWorkTimes?.end);
 
   // REFERENCES
 
@@ -157,11 +167,7 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
     setLastBreakTimer(0);
   };
 
-  const handleClick = () => {
-    // console.log(format(workTimes[1].date, 'dd/MM/yyyy') == format(today, 'dd/MM/yyyy'));
-
-    console.log(todayWorkTimes);
-  };
+  const handleClick = () => {};
 
   const handleShiftTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tempTime = addTimeToDate(today, e.target.value);
@@ -188,7 +194,7 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
           </div> */}
           <div className='flex flex-col items-center'>
             <p>Start Time</p>
-            <p>{todayStartTime}</p>
+            <p>{format(todayStartTime, 'HH:mm')}</p>
           </div>
           <div className='flex flex-col items-center'>
             {/* <label htmlFor=''>Enter Finish Time</label>
@@ -199,7 +205,7 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
               className='text-black text-center max-w-max rounded-full pl-2'
             /> */}
             <p>End Time</p>
-            <p>{todayEndTime}</p>
+            <p>{format(todayEndTime, 'HH:mm')}</p>
           </div>
         </div>
         <button className='bg-red-500' onClick={handleClick}>
