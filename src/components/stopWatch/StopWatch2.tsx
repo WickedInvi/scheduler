@@ -11,6 +11,8 @@ import {
   withinFirst30Mins,
   parseDateFromString,
   classNames,
+  withinLast30Mins,
+  within30MinsBreak,
 } from './helpers';
 
 import { schedule } from './workTimes';
@@ -173,8 +175,12 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
     setTimer(0);
     setLastBreakTimer(0);
   };
+  const [canTakeBreak, setCanTakeBreak] = useState(false);
 
-  const handleClick = () => {};
+  const handleClick = () => {
+    setCanTakeBreak(!canTakeBreak);
+    console.log(within30MinsBreak(dateFromLocalStorage('lastBreakTimer')));
+  };
 
   const handleShiftTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tempTime = addTimeToDate(today, e.target.value);
@@ -254,7 +260,12 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
 
             <button
               onClick={handleStartStopClick}
-              className={classNames('rounded-full text-center py-2 px-10 bg-green-500', isActive && 'bg-red-500')}
+              disabled={canTakeBreak}
+              className={classNames(
+                'rounded-full text-center py-2 px-10 bg-green-500',
+                isActive && 'bg-red-500',
+                canTakeBreak && 'bg-gray-500'
+              )}
             >
               Start
             </button>
