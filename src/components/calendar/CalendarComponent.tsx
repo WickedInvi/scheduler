@@ -38,16 +38,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
     let nextMonth = add(currentMonth, { months: +1 });
     setCurrentMonth(nextMonth);
   };
-  // let hours = eachHourOfInterval({ start: startOfToday(), end: endOfToday() });
-  // let minutes = eachMinuteOfInterval({ start: startOfToday(), end: endOfToday() });
 
-  // useEffect(() => {
-  //   minutes.forEach((minute) => {
-  //     if (format(minute.getTime(), 'mm') === '15' || format(minute.getTime(), 'mm') === '30' || format(minute.getTime(), 'mm') === '45') {
-  //       console.log(format(minute.getTime(), 'HH:mm'));
-  //     }
-  //   });
-  // }, []);
   const [days, setDays] = useState<Date[]>([]);
   const [showOtherDays, setShowOtherDays] = useState<boolean>(false);
 
@@ -61,11 +52,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
         )
       : setDays(eachDayOfInterval({ start: currentMonthStart, end: endOfMonth(currentMonth) }));
   }, [showOtherDays, currentMonth]);
-
-  // let days = eachDayOfInterval({
-  //   start: startOfWeek(currentMonthStart, { weekStartsOn: 1 }),
-  //   end: endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 1 }),
-  // });
 
   const toggleOtherDays = () => {
     setShowOtherDays(!showOtherDays);
@@ -81,9 +67,9 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
             <div className="w-11 h-6 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 outline-none"></div>
 
             {showOtherDays ? (
-              <span className='ml-3 text-sm font-medium text-gray-900 dark:text-gray-300'>Show Other Days</span>
-            ) : (
               <span className='ml-3 text-sm font-medium text-gray-900 dark:text-gray-300'>Hide Other Days</span>
+            ) : (
+              <span className='ml-3 text-sm font-medium text-gray-900 dark:text-gray-300'>Show Other Days</span>
             )}
           </label>
           <div className='flex items-center justify-center gap-5'>
@@ -104,7 +90,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
         <div className='grid grid-cols-7 grid-rows-5 max-w-[1280px] border-[1px] border-red-500'>
           {days.map((day, id) => {
             return (
-              // <div key={id} className='w-28 h-28 radius border-[1px] border-red-500'>
               <div
                 key={day.toString()}
                 className={classNames(
@@ -148,7 +133,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
                         </p>
                       );
                     })}
-                  {/* <p className='text-sm'>12:00 - 13:00</p> */}
                   {isSameMonth(day, currentMonthStart) && (
                     <label className='hidden' ref={(el) => (hiddenAddLabel.current[id] = el)}>
                       Add
@@ -168,12 +152,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
                       <button>copy end week</button>
                     </div>
                   )}
-                  {/* 
-                  <div className='absolute top-20 bg-slate-400 flex gap-2 z-10'>
-                    <button>Add time</button>
-                    <button>copy next week</button>
-                    <button>copy end week</button>
-                  </div> */}
                 </div>
               </div>
             );

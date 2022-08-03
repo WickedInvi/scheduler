@@ -1,19 +1,6 @@
-import { add, differenceInMinutes, differenceInSeconds, format, intervalToDuration, isSameDay, startOfDay, startOfToday } from 'date-fns';
+import { differenceInMinutes, differenceInSeconds, format, isSameDay, startOfToday } from 'date-fns';
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  formatSecondsForDisplay,
-  dateFromLocalStorage,
-  getHoursFromString,
-  getMinutesFromString,
-  parseTimeFromString,
-  isCurrentTimeWithin30minutesOfStartTime,
-  addTimeToDate,
-  withinFirst30Mins,
-  parseDateFromString,
-  classNames,
-  withinLast30Mins,
-  within30MinsBreak,
-} from './helpers';
+import { formatSecondsForDisplay, dateFromLocalStorage, addTimeToDate, parseDateFromString, classNames } from './helpers';
 
 import { schedule } from './workTimes';
 
@@ -71,7 +58,6 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   const lastBreakTimerRef = useRef<any>(null);
 
   // TODAY WORK TIMES
-  // const todayWorkTimes = schedule.workTimes.filter((workTime) => isSameDay(workTime.date, today));
   type WorkTime = {
     date: Date;
     start: string;
@@ -84,7 +70,6 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   const todayEndTime = parseDateFromString(today, todayWorkTimes?.end);
 
   // REFERENCES
-
   const manualBreakRef = useRef<HTMLInputElement>(null);
 
   // TIMER FUNCTIONS
@@ -114,14 +99,15 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   }, [breakTimeLog]);
 
   useEffect(() => {
-    isActive && localStorage.getItem('breakTimer')
-      ? setTimer(differenceInSeconds(currentTime, dateFromLocalStorage('startOfBreakTime')))
-      : null;
+    if (typeof window !== 'undefined') {
+      isActive && localStorage.getItem('breakTimer')
+        ? setTimer(differenceInSeconds(currentTime, dateFromLocalStorage('startOfBreakTime')))
+        : null;
 
-    !isActive && localStorage.getItem('lastBreakTimer')
-      ? setLastBreakTimer(differenceInSeconds(currentTime, dateFromLocalStorage('lastBreakTimer')))
-      : null;
-
+      !isActive && localStorage.getItem('lastBreakTimer')
+        ? setLastBreakTimer(differenceInSeconds(currentTime, dateFromLocalStorage('lastBreakTimer')))
+        : null;
+    }
     let shiftLengthInMin = differenceInMinutes(todayEndTime, todayStartTime);
     let breakTime = breakTimeLengths.find((breakTime) => shiftLengthInMin <= breakTime.shiftLength);
     setMaxBreakTime(breakTime?.breakTime);
@@ -178,12 +164,9 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
     if (minutes < minBreakTime) {
       alert(`You must take a break of at least ${minBreakTime} minutes.`);
     } else {
-      // setBreakTimeLog((prev) => [...prev, { timeInSeconds: timer, date: format(new Date(), 'HH:mm:ss') }]);
       setBreakTimeLog((prev) => [...prev, { timeInSeconds: timer, date: format(new Date(), 'HH:mm:ss') }]);
-
       clearInterval(timerRef.current);
       setIsActive(false);
-      // props.setTimer(timer);
       setTimer(0);
       startLastBreakTimer();
       (e.target as HTMLButtonElement).textContent = 'Start';
@@ -275,16 +258,6 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
           <p className=''>Break timer --- {formatSecondsForDisplay(timer)}</p>
           <p className=''>Time since last break --- {formatSecondsForDisplay(lastBreakTimer)}</p>
           <div className='flex items-center gap-5'>
-            {/* {!isActive ? (
-              <button onClick={handleStartStopClick} className='rounded-full text-center py-2 px-10 bg-green-500'>
-                Start
-              </button>
-            ) : (
-              <button onClick={handleStartStopClick} className='rounded-full text-center py-2 px-10 bg-red-500'>
-                Stop
-              </button>
-            )}{' '} */}
-
             <button
               onClick={handleStartStopClick}
               disabled={canTakeBreak}

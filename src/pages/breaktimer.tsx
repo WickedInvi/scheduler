@@ -1,9 +1,6 @@
 import type { NextPage } from 'next';
-import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { trpc } from '../utils/trpc';
-import StopWatch2 from '@components/stopWatch/StopWatch2';
-import DisplayTimes from '@components/stopWatch/DisplayTimes';
 import dynamic from 'next/dynamic';
 
 type TechnologyCardProps = {
@@ -27,64 +24,12 @@ const BreakTimer: NextPage = () => {
     setBreakTimeLog((prev) => [...prev, { timeInSeconds: time, date: new Date().toLocaleTimeString() }]);
   };
 
-  const formatTime = (timer: number) => {
-    const getSeconds = `0${timer % 60}`.slice(-2);
-    const getMinutes = `0${Math.floor(timer / 60) % 60}`.slice(-2);
-    const getHours = `0${Math.floor(timer / 3600)}`.slice(-2);
-
-    return `${getHours} : ${getMinutes} : ${getSeconds}`;
-  };
-
-  const breakLengths = [15, 30, 45, 60, 90];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [currentTime]);
-
-  // if (currentTime === undefined) {
-  //   return <h1 className='h-screen w-full flex justify-center items-center text-5xl font-bold'>Loading ...</h1>;
-  // }
-
   return (
     <>
       <div className='container mx-auto flex flex-col items-center h-screen p-4'>
-        {/* <h1 className='select-none text-5xl'>Time now is: {currentTime.toLocaleTimeString()}</h1> */}
-
-        {/* <input
-          type='text'
-          placeholder='Enter Break Time'
-          className='rounded-full text-center p-1 mt-10 select-none'
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              setBreakTime(
-                Number((e.target as HTMLInputElement).value)
-              );
-            }
-          }}
-        /> */}
-        <select
-          name=''
-          id=''
-          className='rounded-full text-center p-1 mt-10 select-none text-black'
-          onChange={(e) => {
-            setMaxBreakTime(Number((e.target as HTMLSelectElement).value));
-          }}
-        >
-          <option value=''>Select Break Time</option>
-          {breakLengths.map((length) => (
-            <option key={length} value={length}>
-              {length}
-            </option>
-          ))}
-        </select>
-
         <StopWatch2NoSSR setTimer={StopWatchCallBack}></StopWatch2NoSSR>
 
-        <DisplayTimesNoSSR></DisplayTimesNoSSR>
+        <DisplayTimesNoSSR />
       </div>
     </>
   );
