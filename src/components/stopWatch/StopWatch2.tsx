@@ -1,4 +1,4 @@
-import { add, differenceInSeconds, format, intervalToDuration, isSameDay, startOfDay, startOfToday } from 'date-fns';
+import { add, differenceInMinutes, differenceInSeconds, format, intervalToDuration, isSameDay, startOfDay, startOfToday } from 'date-fns';
 import React, { useState, useRef, useEffect } from 'react';
 import {
   formatSecondsForDisplay,
@@ -27,15 +27,40 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   const [isActive, setIsActive] = useState(localStorage.getItem('isActive') === 'true' ? true : false);
 
   const [breakTimeLog, setBreakTimeLog] = useState<{ timeInSeconds: number; date: string }[]>(localStorageBreakTimeLog);
+
   // Settings
   const minBreakTime = 0;
   let today = startOfToday();
+
+  const breakTimeLengths = [
+    {
+      shiftLength: 4 * 60,
+      breakTime: 15,
+    },
+    {
+      shiftLength: 8 * 60,
+      breakTime: 30,
+    },
+    {
+      shiftLength: 11 * 60,
+      breakTime: 60,
+    },
+    {
+      shiftLength: 24 * 60,
+      breakTime: 90,
+    },
+  ];
 
   const [startTime, setStartTime] = useState<Date>();
   const [endTime, setEndTime] = useState<Date>();
 
   // CURRENT TIME
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
+
+  // MAX BREAK TIME
+  const [maxBreakTime, setMaxBreakTime] = useState<number | undefined>(0);
+
+  const [canTakeBreak, setCanTakeBreak] = useState(false);
 
   // TIMER
   const [timer, setTimer] = useState<number>(0);
@@ -54,7 +79,7 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
     dayOff: boolean;
   };
 
-  const todayWorkTimes: WorkTime | undefined = schedule.workTimes.filter((workTime) => isSameDay(workTime.date, today))[0];
+  const todayWorkTimes: WorkTime | undefined = schedule.workTimes.find((workTime) => isSameDay(workTime.date, today));
   const todayStartTime = parseDateFromString(today, todayWorkTimes?.start);
   const todayEndTime = parseDateFromString(today, todayWorkTimes?.end);
 
@@ -96,6 +121,10 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
     !isActive && localStorage.getItem('lastBreakTimer')
       ? setLastBreakTimer(differenceInSeconds(currentTime, dateFromLocalStorage('lastBreakTimer')))
       : null;
+
+    let shiftLengthInMin = differenceInMinutes(todayEndTime, todayStartTime);
+    let breakTime = breakTimeLengths.find((breakTime) => shiftLengthInMin <= breakTime.shiftLength);
+    setMaxBreakTime(breakTime?.breakTime);
   }, []);
 
   useEffect(() => {
@@ -175,11 +204,9 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
     setTimer(0);
     setLastBreakTimer(0);
   };
-  const [canTakeBreak, setCanTakeBreak] = useState(false);
 
   const handleClick = () => {
-    setCanTakeBreak(!canTakeBreak);
-    console.log(within30MinsBreak(dateFromLocalStorage('lastBreakTimer')));
+    console.log(maxBreakTime);
   };
 
   const handleShiftTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
