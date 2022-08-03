@@ -1,4 +1,5 @@
 import { toggleClasses, classNames } from '@components/stopWatch/helpers';
+import { workTimes } from '@components/stopWatch/workTimes';
 import {
   startOfToday,
   format,
@@ -11,6 +12,7 @@ import {
   isToday,
   isSameMonth,
   getDay,
+  isSameDay,
 } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
@@ -110,7 +112,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
                   id === 0 && colStartClasses[getDay(day) - 1]
                 )}
                 onClick={() => {
-                  console.log();
                   isSameMonth(day, currentMonthStart) ? toggleClasses(hiddenMenu, id, ['hidden', 'flex']) : null;
                 }}
                 onMouseEnter={() => {
@@ -132,7 +133,18 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
                   >
                     {format(day, 'dd')}
                   </time>
-                  <p className='text-sm'>12:00 - 13:00</p>
+                  {workTimes
+                    .filter((workTime) => {
+                      return isSameDay(workTime.date, day) && !workTime.dayOff;
+                    })
+                    .map((day, id) => {
+                      return (
+                        <p key={id} className='text-sm'>
+                          {day.start} - {day.end}
+                        </p>
+                      );
+                    })}
+                  {/* <p className='text-sm'>12:00 - 13:00</p> */}
                   {isSameMonth(day, currentMonthStart) && (
                     <label className='hidden' ref={(el) => (hiddenAddLabel.current[id] = el)}>
                       Add
