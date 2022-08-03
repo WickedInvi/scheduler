@@ -11,10 +11,6 @@ import {
   isToday,
   isSameMonth,
   getDay,
-  getTime,
-  eachHourOfInterval,
-  eachMinuteOfInterval,
-  endOfToday,
 } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
@@ -50,21 +46,48 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
   //     }
   //   });
   // }, []);
+  const [days, setDays] = useState<Date[]>([]);
+  const [showOtherDays, setShowOtherDays] = useState<boolean>(false);
 
-  let days = eachDayOfInterval({
-    start: startOfWeek(currentMonthStart, { weekStartsOn: 1 }),
-    end: endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 1 }),
-  });
+  useEffect(() => {
+    showOtherDays
+      ? setDays(
+          eachDayOfInterval({
+            start: startOfWeek(currentMonthStart, { weekStartsOn: 1 }),
+            end: endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 1 }),
+          })
+        )
+      : setDays(eachDayOfInterval({ start: currentMonthStart, end: endOfMonth(currentMonth) }));
+  }, [showOtherDays, currentMonth]);
+
+  // let days = eachDayOfInterval({
+  //   start: startOfWeek(currentMonthStart, { weekStartsOn: 1 }),
+  //   end: endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 1 }),
+  // });
+
+  const toggleOtherDays = () => {
+    setShowOtherDays(!showOtherDays);
+  };
 
   return (
     <div className='w-full flex flex-col items-center justify-center gap-5'>
       <div>
         <div className='flex justify-between items-center'>
           <h3> Display days of the month</h3>
+          <label htmlFor='checked-toggle' className='inline-flex relative items-center cursor-pointer'>
+            <input type='checkbox' id='checked-toggle' className='sr-only peer' onChange={toggleOtherDays} />
+            <div className="w-11 h-6 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 outline-none"></div>
+
+            {showOtherDays ? (
+              <span className='ml-3 text-sm font-medium text-gray-900 dark:text-gray-300'>Show Other Days</span>
+            ) : (
+              <span className='ml-3 text-sm font-medium text-gray-900 dark:text-gray-300'>Hide Other Days</span>
+            )}
+          </label>
           <div className='flex items-center justify-center gap-5'>
             <BsFillArrowLeftCircleFill className='fill-blue-500 hover:fill-blue-600' size={25} onClick={prevMonth} />
             <p>{format(currentMonth, 'MMM yy')}</p>
-            <BsFillArrowRightCircleFill className='fill-blue-500 hover:fill-blue-600' size={25} onClick={prevMonth} />
+            <BsFillArrowRightCircleFill className='fill-blue-500 hover:fill-blue-600' size={25} onClick={nextMonth} />
           </div>
         </div>
         <div className='grid grid-cols-7 gap-2 max-w-[1280px] text-center'>
