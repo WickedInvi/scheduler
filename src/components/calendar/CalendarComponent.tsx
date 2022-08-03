@@ -1,5 +1,5 @@
 import { toggleClasses, classNames } from '@components/stopWatch/helpers';
-import { workTimes } from '@components/stopWatch/workTimes';
+import { schedule } from '@components/stopWatch/workTimes';
 import {
   startOfToday,
   format,
@@ -112,7 +112,11 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
                   id === 0 && colStartClasses[getDay(day) - 1]
                 )}
                 onClick={() => {
-                  isSameMonth(day, currentMonthStart) ? toggleClasses(hiddenMenu, id, ['hidden', 'flex']) : null;
+                  schedule.isApproved && schedule.month == format(currentMonth, 'MMM')
+                    ? null
+                    : isSameMonth(day, currentMonthStart)
+                    ? toggleClasses(hiddenMenu, id, ['hidden', 'flex'])
+                    : null;
                 }}
                 onMouseEnter={() => {
                   isSameMonth(day, currentMonthStart) ? hiddenAddLabel.current[id].classList.toggle('hidden') : null;
@@ -133,7 +137,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
                   >
                     {format(day, 'dd')}
                   </time>
-                  {workTimes
+                  {schedule.workTimes
                     .filter((workTime) => {
                       return isSameDay(workTime.date, day) && !workTime.dayOff;
                     })

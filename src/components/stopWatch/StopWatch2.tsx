@@ -10,7 +10,7 @@ import {
   addTimeToDate,
 } from './helpers';
 
-import { workTimes } from './workTimes';
+import { schedule } from './workTimes';
 
 export interface StopWatch2Props {
   setTimer: (timer: number) => void;
@@ -41,7 +41,7 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   const lastBreakTimerRef = useRef<any>(null);
 
   // TODAY WORK TIMES
-  const todayWorkTimes = workTimes.filter((workTime) => isSameDay(workTime.date, today));
+  const todayWorkTimes = schedule.workTimes.filter((workTime) => isSameDay(workTime.date, today));
   const todayStartTime = todayWorkTimes[0]?.start;
   const todayEndTime = todayWorkTimes[0]?.end;
 
