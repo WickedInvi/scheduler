@@ -36,7 +36,7 @@ type Time = {
   seconds: number;
 };
 
-export const parseDateFromString = (date: Date, time: string) => {
+export const parseDateFromString = (date: Date, time: string | undefined) => {
   if (time != undefined) {
     let [hours, minutes, seconds] = time.split(':');
 

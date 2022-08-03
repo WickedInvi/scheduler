@@ -10,6 +10,7 @@ import {
   addTimeToDate,
   withinFirst30Mins,
   parseDateFromString,
+  classNames,
 } from './helpers';
 
 import { schedule } from './workTimes';
@@ -129,16 +130,17 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   };
 
   // START HANDLER
-  const handleStart = () => {
+  const handleStart = (e: React.MouseEvent<HTMLButtonElement>) => {
     localStorageStartHandler();
     setIsActive(true);
     setLastBreakTimer(0);
     clearInterval(lastBreakTimerRef.current);
     startBreakTimer();
+    (e.target as HTMLButtonElement).textContent = 'Stop';
   };
 
   // STOP HANDLER
-  const handleStop = () => {
+  const handleStop = (e: React.MouseEvent<HTMLButtonElement>) => {
     localStorageStopHandler();
     setIsActive(false);
     const minutes = Math.floor(timer / 60) % 60;
@@ -153,7 +155,12 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
       // props.setTimer(timer);
       setTimer(0);
       startLastBreakTimer();
+      (e.target as HTMLButtonElement).textContent = 'Start';
     }
+  };
+
+  const handleStartStopClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    isActive ? handleStop(e) : handleStart(e);
   };
 
   // RESET HANDLER
@@ -183,7 +190,8 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
       <h1 className='select-none text-5xl'>Time now is: {format(currentTime, 'HH:mm:ss')}</h1>
       <div>
         <div className='flex gap-10 mb-10 justify-center'>
-          {/* <div className='flex flex-col items-center'>
+          <div className='flex flex-col items-center'>
+            <p>For debugging</p>
             <label htmlFor=''>Enter Start Time</label>
             <input
               type='time'
@@ -191,19 +199,19 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
               className='text-black text-center max-w-max rounded-full pl-2'
               onChange={handleShiftTimeChange}
             />
-          </div> */}
-          <div className='flex flex-col items-center'>
-            <p>Start Time</p>
-            <p>{format(todayStartTime, 'HH:mm')}</p>
-          </div>
-          <div className='flex flex-col items-center'>
-            {/* <label htmlFor=''>Enter Finish Time</label>
+            <label htmlFor=''>Enter Finish Time</label>
             <input
               type='time'
               id='shiftEndTime'
               onChange={handleShiftTimeChange}
               className='text-black text-center max-w-max rounded-full pl-2'
-            /> */}
+            />
+          </div>
+          <div className='flex flex-col items-center'>
+            <p>Start Time</p>
+            <p>{format(todayStartTime, 'HH:mm')}</p>
+          </div>
+          <div className='flex flex-col items-center'>
             <p>End Time</p>
             <p>{format(todayEndTime, 'HH:mm')}</p>
           </div>
@@ -234,15 +242,23 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
           <p className=''>Break timer --- {formatSecondsForDisplay(timer)}</p>
           <p className=''>Time since last break --- {formatSecondsForDisplay(lastBreakTimer)}</p>
           <div className='flex items-center gap-5'>
-            {!isActive ? (
-              <button onClick={handleStart} className='rounded-full text-center py-2 px-10 bg-green-500'>
+            {/* {!isActive ? (
+              <button onClick={handleStartStopClick} className='rounded-full text-center py-2 px-10 bg-green-500'>
                 Start
               </button>
             ) : (
-              <button onClick={handleStop} className='rounded-full text-center py-2 px-10 bg-red-500'>
+              <button onClick={handleStartStopClick} className='rounded-full text-center py-2 px-10 bg-red-500'>
                 Stop
               </button>
-            )}
+            )}{' '} */}
+
+            <button
+              onClick={handleStartStopClick}
+              className={classNames('rounded-full text-center py-2 px-10 bg-green-500', isActive && 'bg-red-500')}
+            >
+              Start
+            </button>
+
             <button onClick={handleReset} className='rounded-full text-center py-2 px-10 bg-red-500'>
               RESET
             </button>
