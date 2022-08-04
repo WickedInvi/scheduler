@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
 import { getCookie, setCookie } from 'typescript-cookie';
+import { trpc } from 'utils/trpc';
 
 type cookies = {
   name: string;
@@ -16,12 +17,18 @@ const TestComponent: React.FC<testComponentProps> = (
   props: testComponentProps
 ) => {
   const [rememberMe, setRememberMe] = useState<boolean>(
-    JSON.parse(props.rememberMe) || false
+    props.rememberMe ? JSON.parse(props.rememberMe) : false
   );
+  const posts = trpc.useQuery(['posts.getAll']);
 
   useEffect(() => {
     setCookie('rememberMe', rememberMe);
+    console.log('hello', posts.data);
   }, [rememberMe]);
+
+  if (posts.isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>

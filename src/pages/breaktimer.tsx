@@ -88,8 +88,10 @@ function parseCookies(req: any) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const posts = await prisma.post.findMany();
-  console.log('posts', posts);
+  // const posts = await prisma.post.findMany();
+  // const hello = trpc.useQuery(['example.hello', { text: 'from tRPC' }]);
+
+  // console.log('posts', hello);
 
   const cookies = parseCookies(req);
 
