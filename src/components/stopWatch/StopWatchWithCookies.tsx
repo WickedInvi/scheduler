@@ -1,40 +1,22 @@
 import { differenceInMinutes, differenceInSeconds, format, isSameDay, startOfToday } from 'date-fns';
 import React, { useState, useRef, useEffect } from 'react';
 import { formatSecondsForDisplay, dateFromLocalStorage, addTimeToDate, parseDateFromString, classNames } from './helpers';
-
+import { getCookie, setCookie } from 'typescript-cookie';
 import { schedule } from './workTimes';
+import { GetServerSideProps } from 'next';
 
-export interface StopWatch2Props {}
+export interface StopWatchWithCookiesProps {}
 
-const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
-  let localStorageBreakTimeLog = localStorage.getItem('breakTimeLog') ? JSON.parse(localStorage.getItem('breakTimeLog') || '[]') : [];
+const StopWatchWithCookies: React.FC<StopWatchWithCookiesProps> = (props: StopWatchWithCookiesProps) => {
+  let localStorageBreakTimeLog = getCookie('breakTimeLog') ? JSON.parse(getCookie('breakTimeLog') || '[]') : [];
 
-  const [isActive, setIsActive] = useState(localStorage.getItem('isActive') === 'true' ? true : false);
+  const [isActive, setIsActive] = useState(getCookie('isActive') === 'true' ? true : false);
 
   const [breakTimeLog, setBreakTimeLog] = useState<{ timeInSeconds: number; date: string }[]>(localStorageBreakTimeLog);
 
   // Settings
   const minBreakTime = 0;
   let today = startOfToday();
-
-  const breakTimeLengths = [
-    {
-      shiftLength: 4 * 60,
-      breakTime: 15,
-    },
-    {
-      shiftLength: 8 * 60,
-      breakTime: 30,
-    },
-    {
-      shiftLength: 11 * 60,
-      breakTime: 60,
-    },
-    {
-      shiftLength: 24 * 60,
-      breakTime: 90,
-    },
-  ];
 
   const [startTime, setStartTime] = useState<Date>();
   const [endTime, setEndTime] = useState<Date>();
@@ -98,16 +80,14 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      isActive && localStorage.getItem('breakTimer')
-        ? setTimer(differenceInSeconds(currentTime, dateFromLocalStorage('startOfBreakTime')))
-        : null;
+      isActive && getCookie('breakTimer') ? setTimer(differenceInSeconds(currentTime, dateFromLocalStorage('startOfBreakTime'))) : null;
 
-      !isActive && localStorage.getItem('lastBreakTimer')
+      !isActive && getCookie('lastBreakTimer')
         ? setLastBreakTimer(differenceInSeconds(currentTime, dateFromLocalStorage('lastBreakTimer')))
         : null;
     }
     let shiftLengthInMin = differenceInMinutes(todayEndTime, todayStartTime);
-    let breakTime = breakTimeLengths.find((breakTime) => shiftLengthInMin <= breakTime.shiftLength);
+    let breakTime = schedule.breakTimeLengths.find((breakTime) => shiftLengthInMin <= breakTime.shiftLength);
     setMaxBreakTime(breakTime?.breakTime);
   }, []);
 
@@ -117,7 +97,7 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
       startBreakTimer();
     }
 
-    if (!isActive && localStorage.getItem('lastBreakTimer')) {
+    if (!isActive && getCookie('lastBreakTimer')) {
       setTimer(0);
       startLastBreakTimer();
     }
@@ -282,4 +262,4 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   );
 };
 
-export default StopWatch2;
+export default StopWatchWithCookies;

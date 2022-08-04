@@ -3,30 +3,19 @@ import { useState } from 'react';
 import { trpc } from '../utils/trpc';
 import dynamic from 'next/dynamic';
 import StopWatchWithCookies from '@components/stopWatch/StopWatchWithCookies';
-import TestComponent from '@components/stopWatch/TestComponent';
-import { Cookies, getCookie } from 'typescript-cookie';
-import cookie from 'cookie';
-
-const StopWatch2NoSSR = dynamic(() => import('@components/stopWatch/StopWatch2'), { ssr: false });
-const DisplayTimesNoSSR = dynamic(() => import('@components/stopWatch/DisplayTimes'), { ssr: false });
+import TestComponent from '@components/stopWatch/testComponent';
 
 type TechnologyCardProps = {
   name: string;
   description: string;
   documentation: string;
 };
-type cookies = {
-  name: string;
-  value: string;
-};
-export interface BreakTimerProps {
-  cookies: cookies[];
-  rememberMe: string;
-}
 
-const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
+const StopWatch2NoSSR = dynamic(() => import('@components/stopWatch/StopWatch2'), { ssr: false });
+const DisplayTimesNoSSR = dynamic(() => import('@components/stopWatch/DisplayTimes'), { ssr: false });
+
+const BreakTimer: NextPage = (props) => {
   const hello = trpc.useQuery(['example.hello', { text: 'from tRPC' }]);
-  // const [isActive, setIsActive] = useState(getCookie('rememberMe'));
 
   const [currentTime, setCurrentTime] = useState<Date>();
   const [maxBreakTime, setMaxBreakTime] = useState<number>(0);
@@ -40,10 +29,9 @@ const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
   return (
     <>
       <div className='container mx-auto flex flex-col items-center h-screen p-4'>
-        <StopWatch2NoSSR></StopWatch2NoSSR>
+        {/* <StopWatch2NoSSR></StopWatch2NoSSR> */}
         {/* <StopWatchWithCookies /> */}
-        <button onClick={() => console.log(props.rememberMe)}>Clicky</button>
-        {/* <TestComponent rememberMe={props.rememberMe} /> */}
+        <TestComponent />
         <DisplayTimesNoSSR />
       </div>
     </>
@@ -65,18 +53,6 @@ const TechnologyCard = ({ name, description, documentation }: TechnologyCardProp
       </a>
     </section>
   );
-};
-
-function parseCookies(req: any) {
-  return cookie.parse(req ? req.headers.cookie || '' : document.cookie);
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const cookies = parseCookies(req);
-  if (cookies.rememberMe) {
-    return { props: { cookies, rememberMe: cookies.rememberMe } };
-  }
-  return { props: { cookies, rememberMe: false } };
 };
 
 export default BreakTimer;

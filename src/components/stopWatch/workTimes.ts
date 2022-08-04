@@ -1,6 +1,24 @@
 export const schedule = {
   isApproved: true,
   month: 'Aug',
+  breakTimeLengths: [
+    {
+      shiftLength: 4 * 60,
+      breakTime: 15,
+    },
+    {
+      shiftLength: 8 * 60,
+      breakTime: 30,
+    },
+    {
+      shiftLength: 11 * 60,
+      breakTime: 60,
+    },
+    {
+      shiftLength: 24 * 60,
+      breakTime: 90,
+    },
+  ],
   workTimes: [
     {
       date: new Date('2022-08-01'),
