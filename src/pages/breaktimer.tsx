@@ -4,8 +4,9 @@ import { trpc } from '../utils/trpc';
 import dynamic from 'next/dynamic';
 import StopWatchWithCookies from '@components/stopWatch/StopWatchWithCookies';
 import TestComponent from '@components/stopWatch/TestComponent';
-import { Cookies, getCookie } from 'typescript-cookie';
 import cookie from 'cookie';
+import { prisma } from '@server/db/client';
+import { format } from 'date-fns';
 
 const StopWatch2NoSSR = dynamic(() => import('@components/stopWatch/StopWatch2'), { ssr: false });
 const DisplayTimesNoSSR = dynamic(() => import('@components/stopWatch/DisplayTimes'), { ssr: false });
@@ -40,10 +41,10 @@ const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
   return (
     <>
       <div className='container mx-auto flex flex-col items-center h-screen p-4'>
-        <StopWatch2NoSSR></StopWatch2NoSSR>
+        {/* <StopWatch2NoSSR></StopWatch2NoSSR> */}
         {/* <StopWatchWithCookies /> */}
         <button onClick={() => console.log(props.rememberMe)}>Clicky</button>
-        {/* <TestComponent rememberMe={props.rememberMe} /> */}
+        <TestComponent rememberMe={props.rememberMe} />
         <DisplayTimesNoSSR />
       </div>
     </>
@@ -72,7 +73,11 @@ function parseCookies(req: any) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const posts = await prisma.post.findMany();
+  console.log('posts', posts);
+
   const cookies = parseCookies(req);
+
   if (cookies.rememberMe) {
     return { props: { cookies, rememberMe: cookies.rememberMe } };
   }
