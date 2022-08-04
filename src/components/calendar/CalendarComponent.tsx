@@ -15,7 +15,10 @@ import {
   isSameDay,
 } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
-import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from 'react-icons/bs';
+import {
+  BsFillArrowLeftCircleFill,
+  BsFillArrowRightCircleFill,
+} from 'react-icons/bs';
 
 interface CalendarProps {}
 const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
@@ -27,7 +30,15 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
   let hiddenAddLabel = useRef<any>([]);
   let hiddenMenu = useRef<any>([]);
 
-  const colStartClasses = ['', 'col-start-2', 'col-start-3', 'col-start-4', 'col-start-5', 'col-start-6', 'col-start-7'];
+  const colStartClasses = [
+    '',
+    'col-start-2',
+    'col-start-3',
+    'col-start-4',
+    'col-start-5',
+    'col-start-6',
+    'col-start-7',
+  ];
 
   const prevMonth = () => {
     let prevMonth = add(currentMonth, { months: -1 });
@@ -50,7 +61,12 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
             end: endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 1 }),
           })
         )
-      : setDays(eachDayOfInterval({ start: currentMonthStart, end: endOfMonth(currentMonth) }));
+      : setDays(
+          eachDayOfInterval({
+            start: currentMonthStart,
+            end: endOfMonth(currentMonth),
+          })
+        );
   }, [showOtherDays, currentMonth]);
 
   const toggleOtherDays = () => {
@@ -58,27 +74,47 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
   };
 
   return (
-    <div className='w-full flex flex-col items-center justify-center gap-5'>
+    <div className="w-full flex flex-col items-center justify-center gap-5">
       <div>
-        <div className='flex justify-between items-center'>
+        <div className="flex justify-between items-center">
           <h3> Display days of the month</h3>
-          <label htmlFor='checked-toggle' className='inline-flex relative items-center cursor-pointer'>
-            <input type='checkbox' id='checked-toggle' className='sr-only peer' onChange={toggleOtherDays} />
+          <label
+            htmlFor="checked-toggle"
+            className="inline-flex relative items-center cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              id="checked-toggle"
+              className="sr-only peer"
+              onChange={toggleOtherDays}
+            />
             <div className="w-11 h-6 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 outline-none"></div>
 
             {showOtherDays ? (
-              <span className='ml-3 text-sm font-medium text-gray-900 dark:text-gray-300'>Hide Other Days</span>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Hide Other Days
+              </span>
             ) : (
-              <span className='ml-3 text-sm font-medium text-gray-900 dark:text-gray-300'>Show Other Days</span>
+              <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Show Other Days
+              </span>
             )}
           </label>
-          <div className='flex items-center justify-center gap-5'>
-            <BsFillArrowLeftCircleFill className='fill-blue-500 hover:fill-blue-600' size={25} onClick={prevMonth} />
+          <div className="flex items-center justify-center gap-5">
+            <BsFillArrowLeftCircleFill
+              className="fill-blue-500 hover:fill-blue-600"
+              size={25}
+              onClick={prevMonth}
+            />
             <p>{format(currentMonth, 'MMM yy')}</p>
-            <BsFillArrowRightCircleFill className='fill-blue-500 hover:fill-blue-600' size={25} onClick={nextMonth} />
+            <BsFillArrowRightCircleFill
+              className="fill-blue-500 hover:fill-blue-600"
+              size={25}
+              onClick={nextMonth}
+            />
           </div>
         </div>
-        <div className='grid grid-cols-7 gap-2 max-w-[1280px] text-center'>
+        <div className="grid grid-cols-7 gap-2 max-w-[1280px] text-center">
           <div>Mon</div>
           <div>Tue</div>
           <div>Wed</div>
@@ -87,7 +123,7 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
           <div>Sat</div>
           <div>Sun</div>
         </div>
-        <div className='grid grid-cols-7 grid-rows-5 max-w-[1280px] border-[1px] border-red-500'>
+        <div className="grid grid-cols-7 grid-rows-5 max-w-[1280px] border-[1px] border-red-500">
           {days.map((day, id) => {
             return (
               <div
@@ -97,26 +133,37 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
                   id === 0 && colStartClasses[getDay(day) - 1]
                 )}
                 onClick={() => {
-                  schedule.isApproved && schedule.month == format(currentMonth, 'MMM')
+                  schedule.isApproved &&
+                  schedule.month == format(currentMonth, 'MMM')
                     ? null
                     : isSameMonth(day, currentMonthStart)
                     ? toggleClasses(hiddenMenu, id, ['hidden', 'flex'])
                     : null;
                 }}
                 onMouseEnter={() => {
-                  isSameMonth(day, currentMonthStart) ? hiddenAddLabel.current[id].classList.toggle('hidden') : null;
+                  isSameMonth(day, currentMonthStart)
+                    ? hiddenAddLabel.current[id].classList.toggle('hidden')
+                    : null;
                 }}
                 onMouseLeave={() => {
-                  isSameMonth(day, currentMonthStart) ? hiddenAddLabel.current[id].classList.toggle('hidden') : null;
+                  isSameMonth(day, currentMonthStart)
+                    ? hiddenAddLabel.current[id].classList.toggle('hidden')
+                    : null;
                 }}
               >
-                <div className={classNames('flex flex-col justify-between items-center')}>
+                <div
+                  className={classNames(
+                    'flex flex-col justify-between items-center'
+                  )}
+                >
                   <time
                     dateTime={format(day, 'yyyy-MM-dd')}
                     className={classNames(
                       'bg-blue-500 text-white text-center text-xs font-bold p-1 rounded-full',
                       isToday(day) && 'text-red-500',
-                      isSameMonth(day, currentMonthStart) && !isToday(day) && 'text-white',
+                      isSameMonth(day, currentMonthStart) &&
+                        !isToday(day) &&
+                        'text-white',
                       !isSameMonth(day, currentMonthStart) && 'opacity-50'
                     )}
                   >
@@ -128,19 +175,25 @@ const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
                     })
                     .map((day, id) => {
                       return (
-                        <p key={id} className='text-sm'>
+                        <p key={id} className="text-sm">
                           {day.start} - {day.end}
                         </p>
                       );
                     })}
                   {isSameMonth(day, currentMonthStart) && (
-                    <label className='hidden' ref={(el) => (hiddenAddLabel.current[id] = el)}>
+                    <label
+                      className="hidden"
+                      ref={(el) => (hiddenAddLabel.current[id] = el)}
+                    >
                       Add
                     </label>
                   )}
 
                   {isSameMonth(day, currentMonthStart) && (
-                    <div ref={(el) => (hiddenMenu.current[id] = el)} className='hidden absolute top-20 bg-slate-400 gap-2 z-10'>
+                    <div
+                      ref={(el) => (hiddenMenu.current[id] = el)}
+                      className="hidden absolute top-20 bg-slate-400 gap-2 z-10"
+                    >
                       <button
                         onClick={() => {
                           console.log('add');

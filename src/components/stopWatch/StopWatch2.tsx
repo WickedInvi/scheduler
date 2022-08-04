@@ -1,17 +1,35 @@
-import { differenceInMinutes, differenceInSeconds, format, isSameDay, startOfToday } from 'date-fns';
+import {
+  differenceInMinutes,
+  differenceInSeconds,
+  format,
+  isSameDay,
+  startOfToday,
+} from 'date-fns';
 import React, { useState, useRef, useEffect } from 'react';
-import { formatSecondsForDisplay, dateFromLocalStorage, addTimeToDate, parseDateFromString, classNames } from './helpers';
+import {
+  formatSecondsForDisplay,
+  dateFromLocalStorage,
+  addTimeToDate,
+  parseDateFromString,
+  classNames,
+} from './helpers';
 
 import { schedule } from './workTimes';
 
 export interface StopWatch2Props {}
 
 const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
-  let localStorageBreakTimeLog = localStorage.getItem('breakTimeLog') ? JSON.parse(localStorage.getItem('breakTimeLog') || '[]') : [];
+  let localStorageBreakTimeLog = localStorage.getItem('breakTimeLog')
+    ? JSON.parse(localStorage.getItem('breakTimeLog') || '[]')
+    : [];
 
-  const [isActive, setIsActive] = useState(localStorage.getItem('isActive') === 'true' ? true : false);
+  const [isActive, setIsActive] = useState(
+    localStorage.getItem('isActive') === 'true' ? true : false
+  );
 
-  const [breakTimeLog, setBreakTimeLog] = useState<{ timeInSeconds: number; date: string }[]>(localStorageBreakTimeLog);
+  const [breakTimeLog, setBreakTimeLog] = useState<
+    { timeInSeconds: number; date: string }[]
+  >(localStorageBreakTimeLog);
 
   // Settings
   const minBreakTime = 0;
@@ -63,7 +81,9 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
     dayOff: boolean;
   };
 
-  const todayWorkTimes: WorkTime | undefined = schedule.workTimes.find((workTime) => isSameDay(workTime.date, today));
+  const todayWorkTimes: WorkTime | undefined = schedule.workTimes.find(
+    (workTime) => isSameDay(workTime.date, today)
+  );
   const todayStartTime = parseDateFromString(today, todayWorkTimes?.start);
   const todayEndTime = parseDateFromString(today, todayWorkTimes?.end);
 
@@ -79,7 +99,12 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
 
   const startBreakTimer = () => {
     timerRef.current = setInterval(() => {
-      setTimer(differenceInSeconds(new Date(), dateFromLocalStorage('startOfBreakTime')));
+      setTimer(
+        differenceInSeconds(
+          new Date(),
+          dateFromLocalStorage('startOfBreakTime')
+        )
+      );
     }, 1000);
   };
 
@@ -99,15 +124,27 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       isActive && localStorage.getItem('breakTimer')
-        ? setTimer(differenceInSeconds(currentTime, dateFromLocalStorage('startOfBreakTime')))
+        ? setTimer(
+            differenceInSeconds(
+              currentTime,
+              dateFromLocalStorage('startOfBreakTime')
+            )
+          )
         : null;
 
       !isActive && localStorage.getItem('lastBreakTimer')
-        ? setLastBreakTimer(differenceInSeconds(currentTime, dateFromLocalStorage('lastBreakTimer')))
+        ? setLastBreakTimer(
+            differenceInSeconds(
+              currentTime,
+              dateFromLocalStorage('lastBreakTimer')
+            )
+          )
         : null;
     }
     let shiftLengthInMin = differenceInMinutes(todayEndTime, todayStartTime);
-    let breakTime = breakTimeLengths.find((breakTime) => shiftLengthInMin <= breakTime.shiftLength);
+    let breakTime = breakTimeLengths.find(
+      (breakTime) => shiftLengthInMin <= breakTime.shiftLength
+    );
     setMaxBreakTime(breakTime?.breakTime);
   }, []);
 
@@ -162,7 +199,10 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
     if (minutes < minBreakTime) {
       alert(`You must take a break of at least ${minBreakTime} minutes.`);
     } else {
-      setBreakTimeLog((prev) => [...prev, { timeInSeconds: timer, date: format(new Date(), 'HH:mm:ss') }]);
+      setBreakTimeLog((prev) => [
+        ...prev,
+        { timeInSeconds: timer, date: format(new Date(), 'HH:mm:ss') },
+      ]);
       clearInterval(timerRef.current);
       setIsActive(false);
       setTimer(0);
@@ -200,62 +240,76 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   };
 
   return (
-    <div className='flex flex-col gap-10 '>
-      <h1 className='select-none text-5xl'>Time now is: {format(currentTime, 'HH:mm:ss')}</h1>
+    <div className="flex flex-col gap-10 ">
+      <h1 className="select-none text-5xl">
+        Time now is: {format(currentTime, 'HH:mm:ss')}
+      </h1>
       <div>
-        <div className='flex gap-10 mb-10 justify-center'>
-          <div className='flex flex-col items-center'>
+        <div className="flex gap-10 mb-10 justify-center">
+          <div className="flex flex-col items-center">
             <p>For debugging</p>
-            <label htmlFor=''>Enter Start Time</label>
+            <label htmlFor="">Enter Start Time</label>
             <input
-              type='time'
-              id='shiftStartTime'
-              className='text-black text-center max-w-max rounded-full pl-2'
+              type="time"
+              id="shiftStartTime"
+              className="text-black text-center max-w-max rounded-full pl-2"
               onChange={handleShiftTimeChange}
             />
-            <label htmlFor=''>Enter Finish Time</label>
+            <label htmlFor="">Enter Finish Time</label>
             <input
-              type='time'
-              id='shiftEndTime'
+              type="time"
+              id="shiftEndTime"
               onChange={handleShiftTimeChange}
-              className='text-black text-center max-w-max rounded-full pl-2'
+              className="text-black text-center max-w-max rounded-full pl-2"
             />
           </div>
-          <div className='flex flex-col items-center'>
+          <div className="flex flex-col items-center">
             <p>Start Time</p>
             <p>{format(todayStartTime, 'HH:mm')}</p>
           </div>
-          <div className='flex flex-col items-center'>
+          <div className="flex flex-col items-center">
             <p>End Time</p>
             <p>{format(todayEndTime, 'HH:mm')}</p>
           </div>
         </div>
-        <button className='bg-red-500' onClick={handleClick}>
+        <button className="bg-red-500" onClick={handleClick}>
           Click Me
         </button>
-        <div className='flex flex-col items-center justify-start'>
-          <h3 className='font-bold text-3xl'>Break Timer</h3>
+        <div className="flex flex-col items-center justify-start">
+          <h3 className="font-bold text-3xl">Break Timer</h3>
 
-          <div className='flex items-center gap-5'>
-            <label htmlFor=''>Enter break time manually</label>
-            <input type='number' ref={manualBreakRef} min='1' max='60' className='text-black text-center max-w-max rounded-full pl-2' />
+          <div className="flex items-center gap-5">
+            <label htmlFor="">Enter break time manually</label>
+            <input
+              type="number"
+              ref={manualBreakRef}
+              min="1"
+              max="60"
+              className="text-black text-center max-w-max rounded-full pl-2"
+            />
 
-            <input type='time' step='360' className='text-black text-center max-w-max rounded-full pl-2' />
+            <input
+              type="time"
+              step="360"
+              className="text-black text-center max-w-max rounded-full pl-2"
+            />
             <button
               onClick={() => {
                 if (manualBreakRef.current) {
                   console.log(manualBreakRef.current.value);
                 }
               }}
-              className='rounded-full text-center py-2 px-10 bg-blue-500'
+              className="rounded-full text-center py-2 px-10 bg-blue-500"
             >
               Add break time
             </button>
           </div>
 
-          <p className=''>Break timer --- {formatSecondsForDisplay(timer)}</p>
-          <p className=''>Time since last break --- {formatSecondsForDisplay(lastBreakTimer)}</p>
-          <div className='flex items-center gap-5'>
+          <p className="">Break timer --- {formatSecondsForDisplay(timer)}</p>
+          <p className="">
+            Time since last break --- {formatSecondsForDisplay(lastBreakTimer)}
+          </p>
+          <div className="flex items-center gap-5">
             <button
               onClick={handleStartStopClick}
               disabled={canTakeBreak}
@@ -268,14 +322,20 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
               Start
             </button>
 
-            <button onClick={handleReset} className='rounded-full text-center py-2 px-10 bg-red-500'>
+            <button
+              onClick={handleReset}
+              className="rounded-full text-center py-2 px-10 bg-red-500"
+            >
               RESET
             </button>
           </div>
         </div>
-        <div className='flex flex-col items-center justify-start'>
-          <h3 className='font-bold text-3xl'>Enter Manually</h3>
-          <input type='number' className='rounded-full text-center py-2 px-10' />
+        <div className="flex flex-col items-center justify-start">
+          <h3 className="font-bold text-3xl">Enter Manually</h3>
+          <input
+            type="number"
+            className="rounded-full text-center py-2 px-10"
+          />
         </div>
       </div>
     </div>

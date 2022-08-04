@@ -8,8 +8,14 @@ import cookie from 'cookie';
 import { prisma } from '@server/db/client';
 import { format } from 'date-fns';
 
-const StopWatch2NoSSR = dynamic(() => import('@components/stopWatch/StopWatch2'), { ssr: false });
-const DisplayTimesNoSSR = dynamic(() => import('@components/stopWatch/DisplayTimes'), { ssr: false });
+const StopWatch2NoSSR = dynamic(
+  () => import('@components/stopWatch/StopWatch2'),
+  { ssr: false }
+);
+const DisplayTimesNoSSR = dynamic(
+  () => import('@components/stopWatch/DisplayTimes'),
+  { ssr: false }
+);
 
 type TechnologyCardProps = {
   name: string;
@@ -32,15 +38,20 @@ const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
   const [currentTime, setCurrentTime] = useState<Date>();
   const [maxBreakTime, setMaxBreakTime] = useState<number>(0);
   const [timer, setTimer] = useState(0);
-  const [breakTimeLog, setBreakTimeLog] = useState<{ timeInSeconds: number; date: string }[]>([]);
+  const [breakTimeLog, setBreakTimeLog] = useState<
+    { timeInSeconds: number; date: string }[]
+  >([]);
   const StopWatchCallBack = (time: number) => {
     setTimer(time);
-    setBreakTimeLog((prev) => [...prev, { timeInSeconds: time, date: new Date().toLocaleTimeString() }]);
+    setBreakTimeLog((prev) => [
+      ...prev,
+      { timeInSeconds: time, date: new Date().toLocaleTimeString() },
+    ]);
   };
 
   return (
     <>
-      <div className='container mx-auto flex flex-col items-center h-screen p-4'>
+      <div className="container mx-auto flex flex-col items-center h-screen p-4">
         {/* <StopWatch2NoSSR></StopWatch2NoSSR> */}
         {/* <StopWatchWithCookies /> */}
         <button onClick={() => console.log(props.rememberMe)}></button>
@@ -51,16 +62,20 @@ const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
   );
 };
 
-const TechnologyCard = ({ name, description, documentation }: TechnologyCardProps) => {
+const TechnologyCard = ({
+  name,
+  description,
+  documentation,
+}: TechnologyCardProps) => {
   return (
-    <section className='flex flex-col justify-center p-6 duration-500 border-2 border-gray-500 rounded shadow-xl motion-safe:hover:scale-105'>
-      <h2 className='text-lg text-gray-700'>{name}</h2>
-      <p className='text-sm text-gray-600'>{description}</p>
+    <section className="flex flex-col justify-center p-6 duration-500 border-2 border-gray-500 rounded shadow-xl motion-safe:hover:scale-105">
+      <h2 className="text-lg text-gray-700">{name}</h2>
+      <p className="text-sm text-gray-600">{description}</p>
       <a
-        className='mt-3 text-sm underline text-violet-500 decoration-dotted underline-offset-2'
+        className="mt-3 text-sm underline text-violet-500 decoration-dotted underline-offset-2"
         href={documentation}
-        target='_blank'
-        rel='noreferrer'
+        target="_blank"
+        rel="noreferrer"
       >
         Documentation
       </a>

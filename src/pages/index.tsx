@@ -7,8 +7,8 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>Break Time Tracker</title>
-        <meta name='description' content='Break Time Tracker' />
-        <link rel='icon' href='/favicon.ico' />
+        <meta name="description" content="Break Time Tracker" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main></main>
     </>

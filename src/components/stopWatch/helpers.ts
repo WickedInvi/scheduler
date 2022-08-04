@@ -74,7 +74,11 @@ export const addTimeToDate = (date: Date, time: string): Date => {
   });
 };
 
-export const toggleClasses = (ref: MutableRefObject<any>, id: number, classes: string[]) => {
+export const toggleClasses = (
+  ref: MutableRefObject<any>,
+  id: number,
+  classes: string[]
+) => {
   classes.forEach((className) => {
     ref.current[id].classList.toggle(className);
   });
@@ -86,7 +90,9 @@ export const classNames = (...classes: any[]) => {
 
 // CHECKERS
 
-export const isCurrentTimeWithin30minutesOfStartTime = (startTime: Date | undefined) => {
+export const isCurrentTimeWithin30minutesOfStartTime = (
+  startTime: Date | undefined
+) => {
   if (startTime) {
     const currentTime = new Date();
     const diffMinutes = Math.floor(differenceInMinutes(currentTime, startTime));
@@ -117,7 +123,9 @@ export const withinLast30Mins = (endTime: Date | undefined) => {
 export const within30MinsBreak = (lastBreakTime: Date | undefined) => {
   if (lastBreakTime) {
     const currentTime = new Date();
-    const diffMinutes = Math.floor(differenceInMinutes(currentTime, lastBreakTime));
+    const diffMinutes = Math.floor(
+      differenceInMinutes(currentTime, lastBreakTime)
+    );
     return diffMinutes >= -30 && diffMinutes <= 30;
   }
   return false;

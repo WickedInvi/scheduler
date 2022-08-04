@@ -12,8 +12,12 @@ export interface testComponentProps {
   rememberMe: string;
 }
 
-const TestComponent: React.FC<testComponentProps> = (props: testComponentProps) => {
-  const [rememberMe, setRememberMe] = useState<boolean>(JSON.parse(props.rememberMe) || false);
+const TestComponent: React.FC<testComponentProps> = (
+  props: testComponentProps
+) => {
+  const [rememberMe, setRememberMe] = useState<boolean>(
+    JSON.parse(props.rememberMe) || false
+  );
 
   useEffect(() => {
     setCookie('rememberMe', rememberMe);
@@ -22,7 +26,7 @@ const TestComponent: React.FC<testComponentProps> = (props: testComponentProps) 
   return (
     <div>
       <input
-        type='checkbox'
+        type="checkbox"
         checked={rememberMe}
         onChange={(e: any) => {
           setRememberMe(e.target.checked);

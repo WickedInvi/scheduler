@@ -70,16 +70,21 @@ export default function StopWatch(props: ChildProps) {
   };
 
   return (
-    <div className='flex gap-10'>
-      <div className='flex flex-col items-center justify-start'>
-        <h3 className='font-bold text-3xl'>Break Timer</h3>
-        <p className=''>Break timer --- {formatTime(timer)}</p>
+    <div className="flex gap-10">
+      <div className="flex flex-col items-center justify-start">
+        <h3 className="font-bold text-3xl">Break Timer</h3>
+        <p className="">Break timer --- {formatTime(timer)}</p>
 
-        <p className=''>Time since last break --- {formatTime(lastBreakTimer)}</p>
-        <div className='flex flex-col items-center gap-5'>
+        <p className="">
+          Time since last break --- {formatTime(lastBreakTimer)}
+        </p>
+        <div className="flex flex-col items-center gap-5">
           <div>
             {!isActive ? (
-              <button onClick={handleStart} className='rounded-full text-center py-2 px-10 bg-green-500'>
+              <button
+                onClick={handleStart}
+                className="rounded-full text-center py-2 px-10 bg-green-500"
+              >
                 Start
               </button>
             ) : (
@@ -87,7 +92,7 @@ export default function StopWatch(props: ChildProps) {
                 ref={stopButtonRef}
                 onClick={handleStop}
                 disabled={!isActive}
-                className='rounded-full text-center py-2 px-10 bg-red-500'
+                className="rounded-full text-center py-2 px-10 bg-red-500"
               >
                 Stop
               </button>
