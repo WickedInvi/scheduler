@@ -89,6 +89,7 @@ const StopWatchWithCookies: React.FC<StopWatchWithCookiesProps> = (props: StopWa
     let shiftLengthInMin = differenceInMinutes(todayEndTime, todayStartTime);
     let breakTime = schedule.breakTimeLengths.find((breakTime) => shiftLengthInMin <= breakTime.shiftLength);
     setMaxBreakTime(breakTime?.breakTime);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -106,6 +107,8 @@ const StopWatchWithCookies: React.FC<StopWatchWithCookiesProps> = (props: StopWa
       clearInterval(timerRef.current);
       clearInterval(lastBreakTimerRef.current);
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // LOCAL STORAGE HANDLERS

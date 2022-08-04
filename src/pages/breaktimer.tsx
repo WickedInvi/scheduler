@@ -43,7 +43,7 @@ const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
       <div className='container mx-auto flex flex-col items-center h-screen p-4'>
         {/* <StopWatch2NoSSR></StopWatch2NoSSR> */}
         {/* <StopWatchWithCookies /> */}
-        <button onClick={() => console.log(props.rememberMe)}>Clicky</button>
+        <button onClick={() => console.log(props.rememberMe)}></button>
         <TestComponent rememberMe={props.rememberMe} />
         <DisplayTimesNoSSR />
       </div>
