@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["referentialIntegrity"]
+    provider = "prisma-client-js"
 }
 
 datasource db {
@@ -12,16 +11,23 @@ datasource db {
     // referentialIntegrity = "prisma"
 }
 
-// model Example {
-//     id String @id @default(cuid())
-// }
+model Post {
+    id    String @id @default(auto()) @map("_id") @db.ObjectId
+    title String
+    body  String
+}
 
-// model Break {
-//     id         String @id @default(cuid())
-//     breakTimes String
-//     userId     String
-//     user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-// }
+model User {
+    id    String @id @default(auto()) @map("_id") @db.ObjectId
+    fname String
+    lname String
+}
+
+model BreakTime {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    date      DateTime @default(now())
+    breakTime String[]
+}
 
 // // Necessary for Next auth
 // model Account {
