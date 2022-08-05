@@ -27,9 +27,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   //   ? JSON.parse(getCookie('breakTimeLog') || '[]')
   //   : [];
 
-  const [isActive, setIsActive] = useState(
-    getCookie('isActive') === 'true' ? true : false
-  );
+  const [isActive, setIsActive] = useState(false);
 
   const [breakTimeLog, setBreakTimeLog] = useState<
     { date: Date; timeInSeconds: number; timeOfBreak: string }[]
@@ -43,7 +41,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   const [endTime, setEndTime] = useState<Date>();
 
   // CURRENT TIME
-  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+  const [currentTime, setCurrentTime] = useState<Date>();
 
   // MAX BREAK TIME
   const [maxBreakTime, setMaxBreakTime] = useState<number | undefined>(0);
@@ -94,6 +92,10 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   };
 
   // ON LOAD
+  useEffect(() => {
+    setCurrentTime(new Date());
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -219,7 +221,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   };
 
   const handleClick = () => {
-    console.log(maxBreakTime);
+    console.log(getCookie('isActive'));
   };
 
   const handleShiftTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,7 +232,9 @@ const BreakComponent: React.FC<BreakComponentProps> = (
     if (e.target.id == 'shiftStartTime') setStartTime(tempTime);
     if (e.target.id == 'shiftEndTime') setEndTime(tempTime);
   };
-
+  if (!currentTime) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="flex flex-col gap-10 border-2">
       <h1 className="select-none text-5xl">
