@@ -2,18 +2,18 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
 import { trpc } from '../utils/trpc';
 import dynamic from 'next/dynamic';
-import StopWatchWithCookies from '@components/stopWatch/StopWatchWithCookies';
-import TestComponent from '@components/stopWatch/TestComponent';
+import BreakComponent from '@components/breakComponent/BreakComponent';
+import TestComponent from '@components/breakComponent/TestComponent';
 import cookie from 'cookie';
 import { prisma } from '@server/db/client';
 import { format } from 'date-fns';
 
 const StopWatch2NoSSR = dynamic(
-  () => import('@components/stopWatch/StopWatch2'),
+  () => import('@components/breakComponent/StopWatch2'),
   { ssr: false }
 );
 const DisplayTimesNoSSR = dynamic(
-  () => import('@components/stopWatch/DisplayTimes'),
+  () => import('@components/breakComponent/DisplayTimes'),
   { ssr: false }
 );
 
@@ -53,9 +53,9 @@ const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
     <>
       <div className="container mx-auto flex flex-col items-center h-screen p-4">
         {/* <StopWatch2NoSSR></StopWatch2NoSSR> */}
-        {/* <StopWatchWithCookies /> */}
+        <BreakComponent />
         <button onClick={() => console.log(props.rememberMe)}></button>
-        <TestComponent rememberMe={props.rememberMe} />
+        {/* <TestComponent rememberMe={props.rememberMe} /> */}
         <DisplayTimesNoSSR />
       </div>
     </>
@@ -95,9 +95,9 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
   const cookies = parseCookies(req);
 
-  if (cookies.rememberMe) {
+  if (cookies.rememberMe)
     return { props: { cookies, rememberMe: cookies.rememberMe } };
-  }
+
   return { props: { cookies, rememberMe: false } };
 };
 

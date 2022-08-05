@@ -8,13 +8,13 @@ type cookies = {
   value: string;
 };
 
-export interface testComponentProps {
+export interface TestComponentProps {
   // cookies: cookies[];
   rememberMe: string;
 }
 
-const TestComponent: React.FC<testComponentProps> = (
-  props: testComponentProps
+const TestComponent: React.FC<TestComponentProps> = (
+  props: TestComponentProps
 ) => {
   const [rememberMe, setRememberMe] = useState<boolean>(
     props.rememberMe ? JSON.parse(props.rememberMe) : false

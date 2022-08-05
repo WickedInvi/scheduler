@@ -1,5 +1,5 @@
-import { toggleClasses, classNames } from '@components/stopWatch/helpers';
-import { schedule } from '@components/stopWatch/workTimes';
+import { toggleClasses, classNames } from '@components/breakComponent/helpers';
+import { schedule } from '@components/breakComponent/workTimes';
 import {
   startOfToday,
   format,

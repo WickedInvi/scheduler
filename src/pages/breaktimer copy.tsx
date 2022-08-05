@@ -2,8 +2,8 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
 import { trpc } from '../utils/trpc';
 import dynamic from 'next/dynamic';
-import StopWatchWithCookies from '@components/stopWatch/StopWatchWithCookies';
-import TestComponent from '@components/stopWatch/testComponent';
+import StopWatchWithCookies from '@components/breakComponent/BreakComponent';
+import TestComponent from '@components/breakComponent/TestComponent';
 
 type TechnologyCardProps = {
   name: string;
@@ -12,11 +12,11 @@ type TechnologyCardProps = {
 };
 
 const StopWatch2NoSSR = dynamic(
-  () => import('@components/stopWatch/StopWatch2'),
+  () => import('@components/breakComponent/StopWatch2'),
   { ssr: false }
 );
 const DisplayTimesNoSSR = dynamic(
-  () => import('@components/stopWatch/DisplayTimes'),
+  () => import('@components/breakComponent/DisplayTimes'),
   { ssr: false }
 );
 
@@ -42,7 +42,7 @@ const BreakTimer: NextPage = (props) => {
       <div className="container mx-auto flex flex-col items-center h-screen p-4">
         {/* <StopWatch2NoSSR></StopWatch2NoSSR> */}
         {/* <StopWatchWithCookies /> */}
-        <TestComponent />
+        {/* <TestComponent /> */}
         <DisplayTimesNoSSR />
       </div>
     </>

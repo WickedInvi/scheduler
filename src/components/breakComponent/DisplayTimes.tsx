@@ -5,7 +5,7 @@ export interface ChildProps {}
 
 export default function DisplayTimes(props: ChildProps) {
   const [breakTimeLog, setBreakTimeLog] = useState<
-    { timeInSeconds: number; date: string }[]
+    { date: Date; timeInSeconds: number; timeOfBreak: string }[]
   >(
     localStorage.getItem('breakTimeLog')
       ? JSON.parse(localStorage.getItem('breakTimeLog') || '[]')
@@ -33,7 +33,7 @@ export default function DisplayTimes(props: ChildProps) {
         <h3>Break taken</h3>
         {breakTimeLog.map((item, id) => (
           <p key={id}>{`Break taken at ${
-            item.date
+            item.timeOfBreak
           } --- Break Time ${formatSecondsForDisplay(item.timeInSeconds)}`}</p>
         ))}
       </div>

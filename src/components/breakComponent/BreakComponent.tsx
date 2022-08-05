@@ -13,46 +13,31 @@ import {
   parseDateFromString,
   classNames,
 } from './helpers';
-
+import { getCookie, setCookie } from 'typescript-cookie';
 import { schedule } from './workTimes';
+import { GetServerSideProps } from 'next';
+import ShiftTimes from './ShfitTimes';
 
-export interface StopWatch2Props {}
+export interface BreakComponentProps {}
 
-const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
-  let localStorageBreakTimeLog = localStorage.getItem('breakTimeLog')
-    ? JSON.parse(localStorage.getItem('breakTimeLog') || '[]')
-    : [];
+const BreakComponent: React.FC<BreakComponentProps> = (
+  props: BreakComponentProps
+) => {
+  // let localStorageBreakTimeLog = getCookie('breakTimeLog')
+  //   ? JSON.parse(getCookie('breakTimeLog') || '[]')
+  //   : [];
 
   const [isActive, setIsActive] = useState(
-    localStorage.getItem('isActive') === 'true' ? true : false
+    getCookie('isActive') === 'true' ? true : false
   );
 
   const [breakTimeLog, setBreakTimeLog] = useState<
-    { timeInSeconds: number; date: string }[]
-  >(localStorageBreakTimeLog);
+    { date: Date; timeInSeconds: number; timeOfBreak: string }[]
+  >([]);
 
   // Settings
   const minBreakTime = 0;
   let today = startOfToday();
-
-  const breakTimeLengths = [
-    {
-      shiftLength: 4 * 60,
-      breakTime: 15,
-    },
-    {
-      shiftLength: 8 * 60,
-      breakTime: 30,
-    },
-    {
-      shiftLength: 11 * 60,
-      breakTime: 60,
-    },
-    {
-      shiftLength: 24 * 60,
-      breakTime: 90,
-    },
-  ];
 
   const [startTime, setStartTime] = useState<Date>();
   const [endTime, setEndTime] = useState<Date>();
@@ -123,7 +108,7 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      isActive && localStorage.getItem('breakTimer')
+      isActive && getCookie('breakTimer')
         ? setTimer(
             differenceInSeconds(
               currentTime,
@@ -132,7 +117,7 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
           )
         : null;
 
-      !isActive && localStorage.getItem('lastBreakTimer')
+      !isActive && getCookie('lastBreakTimer')
         ? setLastBreakTimer(
             differenceInSeconds(
               currentTime,
@@ -142,10 +127,11 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
         : null;
     }
     let shiftLengthInMin = differenceInMinutes(todayEndTime, todayStartTime);
-    let breakTime = breakTimeLengths.find(
+    let breakTime = schedule.breakTimeLengths.find(
       (breakTime) => shiftLengthInMin <= breakTime.shiftLength
     );
     setMaxBreakTime(breakTime?.breakTime);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -154,7 +140,7 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
       startBreakTimer();
     }
 
-    if (!isActive && localStorage.getItem('lastBreakTimer')) {
+    if (!isActive && getCookie('lastBreakTimer')) {
       setTimer(0);
       startLastBreakTimer();
     }
@@ -163,6 +149,8 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
       clearInterval(timerRef.current);
       clearInterval(lastBreakTimerRef.current);
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // LOCAL STORAGE HANDLERS
@@ -201,7 +189,11 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
     } else {
       setBreakTimeLog((prev) => [
         ...prev,
-        { timeInSeconds: timer, date: format(new Date(), 'HH:mm:ss') },
+        {
+          date: new Date(),
+          timeInSeconds: timer,
+          timeOfBreak: format(new Date(), 'HH:mm:ss'),
+        },
       ]);
       clearInterval(timerRef.current);
       setIsActive(false);
@@ -240,13 +232,14 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-10 ">
+    <div className="flex flex-col gap-10 border-2">
       <h1 className="select-none text-5xl">
         Time now is: {format(currentTime, 'HH:mm:ss')}
       </h1>
+      <h2>Break Component</h2>
       <div>
         <div className="flex gap-10 mb-10 justify-center">
-          <div className="flex flex-col items-center">
+          {/* <div className="flex flex-col items-center">
             <p>For debugging</p>
             <label htmlFor="">Enter Start Time</label>
             <input
@@ -262,15 +255,17 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
               onChange={handleShiftTimeChange}
               className="text-black text-center max-w-max rounded-full pl-2"
             />
-          </div>
-          <div className="flex flex-col items-center">
+          </div> */}
+          <ShiftTimes date={todayStartTime} label="Start Time" />
+          <ShiftTimes date={todayEndTime} label="End Time" />
+          {/* <div className="flex flex-col items-center">
             <p>Start Time</p>
             <p>{format(todayStartTime, 'HH:mm')}</p>
           </div>
           <div className="flex flex-col items-center">
             <p>End Time</p>
             <p>{format(todayEndTime, 'HH:mm')}</p>
-          </div>
+          </div> */}
         </div>
         <button className="bg-red-500" onClick={handleClick}>
           Click Me
@@ -342,4 +337,4 @@ const StopWatch2: React.FC<StopWatch2Props> = (props: StopWatch2Props) => {
   );
 };
 
-export default StopWatch2;
+export default BreakComponent;
