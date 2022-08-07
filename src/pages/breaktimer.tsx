@@ -22,12 +22,8 @@ type TechnologyCardProps = {
   description: string;
   documentation: string;
 };
-type cookies = {
-  name: string;
-  value: string;
-};
 export interface BreakTimerProps {
-  cookies: cookies[];
+  cookies: Record<string, string>;
   rememberMe: string;
 }
 
@@ -53,7 +49,7 @@ const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
     <>
       <div className="container mx-auto flex flex-col items-center h-screen p-4">
         {/* <StopWatch2NoSSR></StopWatch2NoSSR> */}
-        <BreakComponent />
+        <BreakComponent cookies={props.cookies} />
         <button onClick={() => console.log(props.rememberMe)}></button>
         {/* <TestComponent rememberMe={props.rememberMe} /> */}
         <DisplayTimesNoSSR />
@@ -83,22 +79,16 @@ const TechnologyCard = ({
   );
 };
 
-function parseCookies(req: any) {
-  return cookie.parse(req ? req.headers.cookie || '' : document.cookie);
-}
+const setCookies = (res: any, req: any, cookies: Cookie[]) => {
+  cookies.forEach((cookie) => {
+    setCookie(cookie.key, cookie.value, { req, res });
+  });
+};
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  // const posts = await prisma.post.findMany();
-  // const hello = trpc.useQuery(['example.hello', { text: 'from tRPC' }]);
-
-  // console.log('posts', hello);
-
-  const cookies = parseCookies(req);
-
-  if (cookies.rememberMe)
-    return { props: { cookies, rememberMe: cookies.rememberMe } };
-
-  return { props: { cookies, rememberMe: false } };
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  return {
+    props: {},
+  };
 };
 
 export default BreakTimer;

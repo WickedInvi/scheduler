@@ -13,25 +13,24 @@ import {
   parseDateFromString,
   classNames,
 } from './helpers';
-import { getCookie, setCookie } from 'typescript-cookie';
+
 import { schedule } from './workTimes';
 import { GetServerSideProps } from 'next';
-import ShiftTimes from './ShfitTimes';
+import ShiftTimes from './ShiftTimes';
 
-export interface BreakComponentProps {}
+import type { BreakTimeLog } from './types';
+
+export interface BreakComponentProps {
+  cookies: Record<string, string>;
+}
 
 const BreakComponent: React.FC<BreakComponentProps> = (
   props: BreakComponentProps
 ) => {
-  // let localStorageBreakTimeLog = getCookie('breakTimeLog')
-  //   ? JSON.parse(getCookie('breakTimeLog') || '[]')
-  //   : [];
+  const [isActive, setIsActive] = useState<boolean>();
 
-  const [isActive, setIsActive] = useState(false);
-
-  const [breakTimeLog, setBreakTimeLog] = useState<
-    { date: Date; timeInSeconds: number; timeOfBreak: string }[]
-  >([]);
+  // TODO Use DB for this
+  const [breakTimeLog, setBreakTimeLog] = useState<BreakTimeLog[]>();
 
   // Settings
   const minBreakTime = 0;
@@ -44,7 +43,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   const [currentTime, setCurrentTime] = useState<Date>();
 
   // MAX BREAK TIME
-  const [maxBreakTime, setMaxBreakTime] = useState<number | undefined>(0);
+  const [maxBreakTime, setMaxBreakTime] = useState<number>(0);
 
   const [canTakeBreak, setCanTakeBreak] = useState(false);
 
@@ -97,6 +96,10 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   }, []);
 
   useEffect(() => {
+    setIsActive(localStorage.getItem('isActive') === 'true');
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -105,12 +108,15 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   }, [currentTime]);
 
   useEffect(() => {
-    localStorage.setItem('breakTimeLog', JSON.stringify(breakTimeLog));
+    if (localStorage.getItem('breakTimeLog') !== null) {
+      console.log('breakTimeLog is not null');
+      localStorage.setItem('breakTimeLog', JSON.stringify(breakTimeLog));
+    }
   }, [breakTimeLog]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      isActive && getCookie('breakTimer')
+    if (typeof window !== 'undefined' && currentTime) {
+      isActive && localStorage.getItem('breakTimer')
         ? setTimer(
             differenceInSeconds(
               currentTime,
@@ -119,7 +125,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
           )
         : null;
 
-      !isActive && getCookie('lastBreakTimer')
+      !isActive && localStorage.getItem('lastBreakTimer')
         ? setLastBreakTimer(
             differenceInSeconds(
               currentTime,
@@ -132,7 +138,11 @@ const BreakComponent: React.FC<BreakComponentProps> = (
     let breakTime = schedule.breakTimeLengths.find(
       (breakTime) => shiftLengthInMin <= breakTime.shiftLength
     );
-    setMaxBreakTime(breakTime?.breakTime);
+
+    // TODO handle undefined
+    if (breakTime) {
+      setMaxBreakTime(breakTime?.breakTime);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -142,7 +152,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
       startBreakTimer();
     }
 
-    if (!isActive && getCookie('lastBreakTimer')) {
+    if (!isActive && localStorage.getItem('lastBreakTimer')) {
       setTimer(0);
       startLastBreakTimer();
     }
@@ -189,14 +199,27 @@ const BreakComponent: React.FC<BreakComponentProps> = (
     if (minutes < minBreakTime) {
       alert(`You must take a break of at least ${minBreakTime} minutes.`);
     } else {
-      setBreakTimeLog((prev) => [
-        ...prev,
-        {
-          date: new Date(),
-          timeInSeconds: timer,
-          timeOfBreak: format(new Date(), 'HH:mm:ss'),
-        },
-      ]);
+      setBreakTimeLog((prev) => {
+        console.log(prev);
+        if (prev !== undefined) {
+          return [
+            ...prev,
+            {
+              date: new Date(),
+              timeInSeconds: timer,
+              timeOfBreak: `${minutes} minutes`,
+            },
+          ];
+        } else {
+          return [
+            {
+              date: new Date(),
+              timeInSeconds: timer,
+              timeOfBreak: `${minutes} minutes`,
+            },
+          ];
+        }
+      });
       clearInterval(timerRef.current);
       setIsActive(false);
       setTimer(0);
@@ -221,7 +244,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   };
 
   const handleClick = () => {
-    console.log(getCookie('isActive'));
+    console.log(localStorage.getItem('breakTimeLog'));
   };
 
   const handleShiftTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
