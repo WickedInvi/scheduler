@@ -1,6 +1,5 @@
 import { add, differenceInMinutes, startOfToday } from 'date-fns';
 import { MutableRefObject } from 'react';
-import { JSONArray, JSONObject } from 'superjson/dist/types';
 
 export const formatSecondsForDisplay = (seconds: number) => {
   const getSeconds = `0${seconds % 60}`.slice(-2);
@@ -37,7 +36,7 @@ type Time = {
 };
 
 export const parseDateFromString = (date: Date, time: string | undefined) => {
-  if (time != undefined) {
+  if (time !== undefined) {
     let [hours, minutes, seconds] = time.split(':');
 
     if (!seconds) seconds = '00';

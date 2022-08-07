@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
 import { formatSecondsForDisplay } from './helpers';
 
+import type { BreakTimeLog } from './types';
+
 export interface ChildProps {}
 
 export default function DisplayTimes(props: ChildProps) {
-  const [breakTimeLog, setBreakTimeLog] = useState<
-    { date: Date; timeInSeconds: number; timeOfBreak: string }[]
-  >(
-    localStorage.getItem('breakTimeLog')
-      ? JSON.parse(localStorage.getItem('breakTimeLog') || '[]')
-      : []
-  );
+  const [breakTimeLog, setBreakTimeLog] = useState<BreakTimeLog[]>([]);
 
   useEffect(() => {
-    console.log('breakTimeLog', [localStorage.getItem('breakTimeLog')]);
-    setBreakTimeLog(JSON.parse(localStorage.getItem('breakTimeLog') || '[]'));
+    if (localStorage.getItem('breakTimeLog') !== null) {
+      console.log('called SetBreakTimeLog');
+      setBreakTimeLog(JSON.parse(localStorage.getItem('breakTimeLog')!));
+    }
   }, [localStorage.getItem('breakTimeLog')]);
 
+  if (!breakTimeLog) {
+    return <div>Loading ...</div>;
+  }
   return (
     <>
       <div className="my-5">
