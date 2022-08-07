@@ -15,7 +15,6 @@ import {
 } from './helpers';
 
 import { schedule } from './workTimes';
-import { GetServerSideProps } from 'next';
 import ShiftTimes from './ShiftTimes';
 
 import type { BreakTimeLog } from './types';
@@ -266,33 +265,8 @@ const BreakComponent: React.FC<BreakComponentProps> = (
       <h2>Break Component</h2>
       <div>
         <div className="flex gap-10 mb-10 justify-center">
-          {/* <div className="flex flex-col items-center">
-            <p>For debugging</p>
-            <label htmlFor="">Enter Start Time</label>
-            <input
-              type="time"
-              id="shiftStartTime"
-              className="text-black text-center max-w-max rounded-full pl-2"
-              onChange={handleShiftTimeChange}
-            />
-            <label htmlFor="">Enter Finish Time</label>
-            <input
-              type="time"
-              id="shiftEndTime"
-              onChange={handleShiftTimeChange}
-              className="text-black text-center max-w-max rounded-full pl-2"
-            />
-          </div> */}
           <ShiftTimes date={todayStartTime} label="Start Time" />
           <ShiftTimes date={todayEndTime} label="End Time" />
-          {/* <div className="flex flex-col items-center">
-            <p>Start Time</p>
-            <p>{format(todayStartTime, 'HH:mm')}</p>
-          </div>
-          <div className="flex flex-col items-center">
-            <p>End Time</p>
-            <p>{format(todayEndTime, 'HH:mm')}</p>
-          </div> */}
         </div>
         <button className="bg-red-500" onClick={handleClick}>
           Click Me
