@@ -15,20 +15,6 @@ export interface BreakTimerProps {
 }
 
 const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
-  const hello = trpc.useQuery(['example.hello', { text: 'from tRPC' }]);
-
-  const [timer, setTimer] = useState(0);
-  const [breakTimeLog, setBreakTimeLog] = useState<
-    { timeInSeconds: number; date: string }[]
-  >([]);
-  const StopWatchCallBack = (time: number) => {
-    setTimer(time);
-    setBreakTimeLog((prev) => [
-      ...prev,
-      { timeInSeconds: time, date: new Date().toLocaleTimeString() },
-    ]);
-  };
-
   return (
     <>
       <div className="container mx-auto flex flex-col items-center h-screen p-4">

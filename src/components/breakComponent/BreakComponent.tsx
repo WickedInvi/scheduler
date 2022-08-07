@@ -175,11 +175,6 @@ const BreakComponent: React.FC<BreakComponentProps> = (
     localStorage.setItem('lastBreakTimer', new Date().getTime().toString());
   };
 
-  // MANUAL BREAK HANDLER
-  const manualBreakHandler = () => {
-    localStorageStopHandler();
-  };
-
   // START HANDLER
   const handleStart = (e: React.MouseEvent<HTMLButtonElement>) => {
     localStorageStartHandler();
@@ -254,6 +249,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
     if (e.target.id == 'shiftStartTime') setStartTime(tempTime);
     if (e.target.id == 'shiftEndTime') setEndTime(tempTime);
   };
+
   if (!currentTime) {
     return <div>Loading...</div>;
   }
