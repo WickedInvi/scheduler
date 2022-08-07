@@ -12,23 +12,6 @@ export default function DisplayTimes(props: ChildProps) {
   const [breakTimeLog, setBreakTimeLog] = useState<BreakTimeLog[]>(
     props.breakTimeLog
   );
-  const data = useMemo(() => breakTimeLog, [breakTimeLog]);
-  const columns = useMemo(
-    () => [
-      { Header: 'Break taken at', accessor: 'date' },
-      { Header: 'Break Time', accessor: 'timeInSeconds' },
-    ],
-    []
-  );
-  const tableInstance = useTable({ columns, data });
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    tableInstance;
-  // useEffect(() => {
-  //   if (localStorage.getItem('breakTimeLog') !== null) {
-  //     console.log('called SetBreakTimeLog');
-  //     setBreakTimeLog(JSON.parse(localStorage.getItem('breakTimeLog')!));
-  //   }
-  // }, [localStorage.getItem('breakTimeLog')]);
 
   useEffect(() => {
     console.log('props.BreakTimeLog changed');
