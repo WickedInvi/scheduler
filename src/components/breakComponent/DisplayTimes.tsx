@@ -30,16 +30,28 @@ export default function DisplayTimes(props: ChildProps) {
             <thead>
               <tr>
                 <th></th>
-                <th>Break taken at</th>
-                <th>Break Time</th>
+                <th>Break at</th>
+                <th>Break Length</th>
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <th></th>
+                <td>Total Break Time</td>
+                <td>
+                  {formatSecondsForDisplay(
+                    breakTimeLog.reduce(
+                      (prev, curr) => prev + curr.timeInSeconds,
+                      0
+                    )
+                  )}
+                </td>
+              </tr>
               {breakTimeLog.map((item, id) => {
                 return (
                   <tr key={id}>
                     <th>{id + 1}</th>
-                    <td>{format(item.date, 'hh:mm')}</td>
+                    <td>{format(item.timeOfBreak, 'HH:mm')}</td>
                     <td>{formatSecondsForDisplay(item.timeInSeconds)}</td>
                   </tr>
                 );
