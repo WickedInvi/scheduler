@@ -1,7 +1,7 @@
 type BreakTimeLog = {
   date: Date;
   timeInSeconds: number;
-  timeOfBreak: string;
+  timeOfBreak: Date;
 };
 
 export type { BreakTimeLog };
