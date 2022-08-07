@@ -109,9 +109,9 @@ const BreakComponent: React.FC<BreakComponentProps> = (
     return () => clearInterval(interval);
   }, [currentTime]);
 
-  useEffect(() => {
-    localStorage.setItem('breakTimeLog', JSON.stringify(breakTimeLog));
-  }, [breakTimeLog]);
+  // useEffect(() => {
+  //   localStorage.setItem('breakTimeLog', JSON.stringify(breakTimeLog));
+  // }, [breakTimeLog]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && currentTime) {
@@ -198,17 +198,17 @@ const BreakComponent: React.FC<BreakComponentProps> = (
           return [
             ...prev,
             {
-              date: new Date(),
+              date: startOfToday(),
               timeInSeconds: timer,
-              timeOfBreak: `${minutes} minutes`,
+              timeOfBreak: new Date(),
             },
           ];
         } else {
           return [
             {
-              date: new Date(),
+              date: startOfToday(),
               timeInSeconds: timer,
-              timeOfBreak: `${minutes} minutes`,
+              timeOfBreak: new Date(),
             },
           ];
         }
