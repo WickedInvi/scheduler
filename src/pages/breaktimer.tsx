@@ -17,7 +17,7 @@ export interface BreakTimerProps {
 const BreakTimer: NextPage<BreakTimerProps> = (props: BreakTimerProps) => {
   return (
     <>
-      <div className="container mx-auto flex flex-col items-center h-screen p-4">
+      <div className="container mx-auto flex flex-col items-center p-4">
         <BreakComponent cookies={props.cookies} />
         <button onClick={() => console.log(props.rememberMe)}></button>
         {/* <DisplayTimesNoSSR /> */}
