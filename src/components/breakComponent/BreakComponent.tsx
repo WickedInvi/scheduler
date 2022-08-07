@@ -21,6 +21,7 @@ import DisplayTimes from './DisplayTimes';
 import ShiftTimes from './ShiftTimes';
 
 import type { BreakTimeLog } from './types';
+import { trpc } from 'utils/trpc';
 
 export interface BreakComponentProps {
   cookies: Record<string, string>;
@@ -29,6 +30,8 @@ export interface BreakComponentProps {
 const BreakComponent: React.FC<BreakComponentProps> = (
   props: BreakComponentProps
 ) => {
+  const log = trpc.useMutation(['breakTimeLog.createBreakTimeLog']);
+  l;
   const [isActive, setIsActive] = useState<boolean>();
 
   // TODO Use DB for this
