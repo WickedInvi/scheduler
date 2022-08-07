@@ -15,6 +15,9 @@ import {
 } from './helpers';
 
 import { schedule } from './workTimes';
+
+// Components
+import DisplayTimes from './DisplayTimes';
 import ShiftTimes from './ShiftTimes';
 
 import type { BreakTimeLog } from './types';
@@ -29,7 +32,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   const [isActive, setIsActive] = useState<boolean>();
 
   // TODO Use DB for this
-  const [breakTimeLog, setBreakTimeLog] = useState<BreakTimeLog[]>();
+  const [breakTimeLog, setBreakTimeLog] = useState<BreakTimeLog[]>([]);
 
   // Settings
   const minBreakTime = 0;
@@ -107,10 +110,7 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   }, [currentTime]);
 
   useEffect(() => {
-    if (localStorage.getItem('breakTimeLog') !== null) {
-      console.log('breakTimeLog is not null');
-      localStorage.setItem('breakTimeLog', JSON.stringify(breakTimeLog));
-    }
+    localStorage.setItem('breakTimeLog', JSON.stringify(breakTimeLog));
   }, [breakTimeLog]);
 
   useEffect(() => {
@@ -194,7 +194,6 @@ const BreakComponent: React.FC<BreakComponentProps> = (
       alert(`You must take a break of at least ${minBreakTime} minutes.`);
     } else {
       setBreakTimeLog((prev) => {
-        console.log(prev);
         if (prev !== undefined) {
           return [
             ...prev,
@@ -329,6 +328,9 @@ const BreakComponent: React.FC<BreakComponentProps> = (
             className="rounded-full text-center py-2 px-10"
           />
         </div>
+      </div>
+      <div>
+        <DisplayTimes breakTimeLog={breakTimeLog} />
       </div>
     </div>
   );
