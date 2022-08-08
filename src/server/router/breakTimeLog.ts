@@ -1,7 +1,6 @@
 import { createRouter } from './context';
 import { z } from 'zod';
-import { resolve } from 'path';
-import breakTimeLog from 'pages/api/breaktimelog';
+import { prisma } from '../db/client';
 
 export const breakTimeLogRouter = createRouter()
   .query('getAll', {
@@ -9,18 +8,21 @@ export const breakTimeLogRouter = createRouter()
       return await ctx.prisma.breakTimeLog.findMany();
     },
   })
-  .mutation('createBreakTimeLog', {
-    input: z.object({ timeInSeconds: z.number(), userId: z.string() }),
-    async resolve(req) {
-      return await prisma?.breakTimeLog.create({
+  .mutation('create', {
+    input: z.object({
+      timeInSeconds: z.number(),
+      userId: z.string(),
+    }),
+    async resolve({ input }) {
+      return await prisma.breakTimeLog.create({
         data: {
           date: new Date(),
-          timeInSeconds: req.input.timeInSeconds,
+          timeInSeconds: input.timeInSeconds,
           timeOfBreak: new Date(),
-          userId: req.input.userId,
+          userId: input.userId,
         },
       });
     },
   });
-// .mutation('updateBreakTimeLog', {})
-// .mutation('deleteBreakTimeLog', {});
+// .mutation('update', {})
+// .mutation('delete', {});
