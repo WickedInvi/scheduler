@@ -30,8 +30,9 @@ export interface BreakComponentProps {
 const BreakComponent: React.FC<BreakComponentProps> = (
   props: BreakComponentProps
 ) => {
-  const log = trpc.useMutation(['breakTimeLog.createBreakTimeLog']);
-  l;
+  const log = trpc.useMutation(['breakTimeLog.create']);
+  const log2 = trpc.useQuery(['breakTimeLog.getAll']);
+
   const [isActive, setIsActive] = useState<boolean>();
 
   // TODO Use DB for this
@@ -240,7 +241,8 @@ const BreakComponent: React.FC<BreakComponentProps> = (
   };
 
   const handleClick = () => {
-    console.log(localStorage.getItem('breakTimeLog'));
+    console.log(log2);
+    log.mutate({ timeInSeconds: 20, userId: '1' });
   };
 
   const handleShiftTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -256,83 +258,90 @@ const BreakComponent: React.FC<BreakComponentProps> = (
     return <div>Loading...</div>;
   }
   return (
-    <div className="flex flex-col gap-10 border-2">
-      <h1 className="select-none text-5xl">
-        Time now is: {format(currentTime, 'HH:mm:ss')}
-      </h1>
-      <h2>Break Component</h2>
+    <div className="flex flex-col md:flex-row gap-10 border-2">
       <div>
-        <div className="flex gap-10 mb-10 justify-center">
-          <ShiftTimes date={todayStartTime} label="Start Time" />
-          <ShiftTimes date={todayEndTime} label="End Time" />
-        </div>
-        <button className="bg-red-500" onClick={handleClick}>
-          Click Me
-        </button>
-        <div className="flex flex-col items-center justify-start">
-          <h3 className="font-bold text-3xl">Break Timer</h3>
+        <h1 className="select-none text-5xl text-center">
+          Current Time
+          <br />
+          {format(currentTime, 'HH:mm:ss')}
+        </h1>
+        <div>
+          <div>
+            <p className="text-center">Shift Times</p>
+            <div className="flex gap-10 mb-10 justify-center">
+              <ShiftTimes date={todayStartTime} label="Start Time" />
+              <ShiftTimes date={todayEndTime} label="End Time" />
+            </div>
+          </div>
+          <button className="bg-red-500" onClick={handleClick}>
+            Click Me
+          </button>
+          <div className="flex flex-col items-center justify-start">
+            <h3 className="font-bold text-3xl">Break Timer</h3>
 
-          <div className="flex items-center gap-5">
-            <label htmlFor="">Enter break time manually</label>
+            <div className="flex items-center gap-5">
+              <label htmlFor="">Enter break time manually</label>
+              <input
+                type="number"
+                ref={manualBreakRef}
+                min="1"
+                max="60"
+                className="text-black text-center max-w-max rounded-full pl-2"
+              />
+
+              <input
+                type="time"
+                step="360"
+                className="text-black text-center max-w-max rounded-full pl-2"
+              />
+              <button
+                onClick={() => {
+                  if (manualBreakRef.current) {
+                    console.log(manualBreakRef.current.value);
+                  }
+                }}
+                className="rounded-full text-center py-2 px-10 bg-blue-500"
+              >
+                Add break time
+              </button>
+            </div>
+
+            <p className="">Break timer --- {formatSecondsForDisplay(timer)}</p>
+            <p className="">
+              Time since last break ---{' '}
+              {formatSecondsForDisplay(lastBreakTimer)}
+            </p>
+            <div className="flex items-center gap-5">
+              <button
+                onClick={handleStartStopClick}
+                disabled={canTakeBreak}
+                className={classNames(
+                  'rounded-full text-center py-2 px-10 bg-green-500',
+                  isActive && 'bg-red-500',
+                  canTakeBreak && 'bg-gray-500'
+                )}
+              >
+                Start
+              </button>
+
+              <button
+                onClick={handleReset}
+                className="rounded-full text-center py-2 px-10 bg-red-500"
+              >
+                RESET
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-start">
+            <h3 className="font-bold text-3xl">Enter Manually</h3>
             <input
               type="number"
-              ref={manualBreakRef}
-              min="1"
-              max="60"
-              className="text-black text-center max-w-max rounded-full pl-2"
+              className="rounded-full text-center py-2 px-10"
             />
-
-            <input
-              type="time"
-              step="360"
-              className="text-black text-center max-w-max rounded-full pl-2"
-            />
-            <button
-              onClick={() => {
-                if (manualBreakRef.current) {
-                  console.log(manualBreakRef.current.value);
-                }
-              }}
-              className="rounded-full text-center py-2 px-10 bg-blue-500"
-            >
-              Add break time
-            </button>
           </div>
-
-          <p className="">Break timer --- {formatSecondsForDisplay(timer)}</p>
-          <p className="">
-            Time since last break --- {formatSecondsForDisplay(lastBreakTimer)}
-          </p>
-          <div className="flex items-center gap-5">
-            <button
-              onClick={handleStartStopClick}
-              disabled={canTakeBreak}
-              className={classNames(
-                'rounded-full text-center py-2 px-10 bg-green-500',
-                isActive && 'bg-red-500',
-                canTakeBreak && 'bg-gray-500'
-              )}
-            >
-              Start
-            </button>
-
-            <button
-              onClick={handleReset}
-              className="rounded-full text-center py-2 px-10 bg-red-500"
-            >
-              RESET
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-col items-center justify-start">
-          <h3 className="font-bold text-3xl">Enter Manually</h3>
-          <input
-            type="number"
-            className="rounded-full text-center py-2 px-10"
-          />
         </div>
       </div>
-      <div>
+      <div className="min-w-[420px]">
         <DisplayTimes breakTimeLog={breakTimeLog} />
       </div>
     </div>
