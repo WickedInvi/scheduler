@@ -20,16 +20,14 @@ import { schedule } from './workTimes';
 import DisplayTimes from './DisplayTimes';
 import ShiftTimes from './ShiftTimes';
 
+// Types
 import type { BreakTimeLog } from './types';
+
 import { trpc } from 'utils/trpc';
 
-export interface BreakComponentProps {
-  cookies: Record<string, string>;
-}
+interface BreakComponentProps {}
 
-const BreakComponent: React.FC<BreakComponentProps> = (
-  props: BreakComponentProps
-) => {
+const BreakComponent: React.FC<BreakComponentProps> = () => {
   const log = trpc.useMutation(['breakTimeLog.create']);
   const log2 = trpc.useQuery(['breakTimeLog.getAll']);
 
