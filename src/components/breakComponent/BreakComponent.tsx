@@ -21,7 +21,7 @@ import DisplayTimes from './DisplayTimes';
 import type { BreakTimeLog } from './types';
 
 import { trpc } from 'utils/trpc';
-import ShiftTimes from './ShiftTimes';
+import ShiftTimes from '@components/breakComponent/shiftTimes/ShiftTimes';
 
 interface BreakComponentProps {}
 
@@ -241,7 +241,7 @@ const BreakComponent: React.FC<BreakComponentProps> = () => {
             Click Me
           </button>
           <div className="flex flex-col items-center justify-start">
-            <h3 className="font-bold text-3xl">Break Timer</h3>
+            <h3 className="font-bold text-xl">Break Timer</h3>
 
             <p className="">Break timer --- {formatSecondsForDisplay(timer)}</p>
             <p className="">
