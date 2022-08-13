@@ -1,20 +1,37 @@
-import { format } from 'date-fns';
-
 interface ShiftTimesProps {
-  label: string;
-  date: Date | number;
+  day: Date;
 }
 
-const ShiftTimes: React.FC<ShiftTimesProps> = ({
-  label,
-  date,
-}: ShiftTimesProps) => {
-  return (
-    <div className="flex flex-col items-center">
-      <p>{label}</p>
-      <p>{format(date, 'HH:mm')}</p>
-    </div>
-  );
+// TODAY WORK TIMES
+type WorkTime = {
+  date: Date;
+  start: string;
+  end: string;
+  dayOff: boolean;
 };
 
-export default ShiftTimes;
+import { parseDateFromString } from './helpers';
+
+import { isSameDay } from 'date-fns';
+
+import { schedule } from './workTimes';
+import ShiftTime from './ShiftTime';
+
+export default function ShiftTimes({ day }: ShiftTimesProps) {
+  const todayWorkTimes: WorkTime | undefined = schedule.workTimes.find(
+    (workTime) => isSameDay(workTime.date, day)
+  );
+
+  const todayStartTime = parseDateFromString(day, todayWorkTimes?.start);
+  const todayEndTime = parseDateFromString(day, todayWorkTimes?.end);
+
+  return (
+    <div>
+      <p className="text-center">Shift Times</p>
+      <div className="flex gap-10 mb-10 justify-center">
+        <ShiftTime date={todayStartTime} label="Start Time" />
+        <ShiftTime date={todayEndTime} label="Finish Time" />
+      </div>
+    </div>
+  );
+}

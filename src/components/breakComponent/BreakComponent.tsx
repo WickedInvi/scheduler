@@ -2,7 +2,6 @@ import {
   differenceInMinutes,
   differenceInSeconds,
   format,
-  isSameDay,
   startOfToday,
 } from 'date-fns';
 import React, { useState, useRef, useEffect } from 'react';
@@ -10,7 +9,6 @@ import {
   formatSecondsForDisplay,
   dateFromLocalStorage,
   addTimeToDate,
-  parseDateFromString,
   classNames,
 } from './helpers';
 
@@ -18,19 +16,16 @@ import { schedule } from './workTimes';
 
 // Components
 import DisplayTimes from './DisplayTimes';
-import ShiftTimes from './ShiftTimes';
 
 // Types
 import type { BreakTimeLog } from './types';
 
 import { trpc } from 'utils/trpc';
+import ShiftTimes from './ShiftTimes';
 
 interface BreakComponentProps {}
 
 const BreakComponent: React.FC<BreakComponentProps> = () => {
-  const log = trpc.useMutation(['breakTimeLog.create']);
-  const log2 = trpc.useQuery(['breakTimeLog.getAll']);
-
   const [isActive, setIsActive] = useState<boolean>();
 
   // TODO Use DB for this
@@ -58,20 +53,6 @@ const BreakComponent: React.FC<BreakComponentProps> = () => {
   // LAST BREAK TIMER
   const [lastBreakTimer, setLastBreakTimer] = useState<number>(0);
   const lastBreakTimerRef = useRef<any>(null);
-
-  // TODAY WORK TIMES
-  type WorkTime = {
-    date: Date;
-    start: string;
-    end: string;
-    dayOff: boolean;
-  };
-
-  const todayWorkTimes: WorkTime | undefined = schedule.workTimes.find(
-    (workTime) => isSameDay(workTime.date, today)
-  );
-  const todayStartTime = parseDateFromString(today, todayWorkTimes?.start);
-  const todayEndTime = parseDateFromString(today, todayWorkTimes?.end);
 
   // REFERENCES
   const manualBreakRef = useRef<HTMLInputElement>(null);
@@ -135,15 +116,7 @@ const BreakComponent: React.FC<BreakComponentProps> = () => {
           )
         : null;
     }
-    let shiftLengthInMin = differenceInMinutes(todayEndTime, todayStartTime);
-    let breakTime = schedule.breakTimeLengths.find(
-      (breakTime) => shiftLengthInMin <= breakTime.shiftLength
-    );
 
-    // TODO handle undefined
-    if (breakTime) {
-      setMaxBreakTime(breakTime?.breakTime);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -238,10 +211,7 @@ const BreakComponent: React.FC<BreakComponentProps> = () => {
     setLastBreakTimer(0);
   };
 
-  const handleClick = () => {
-    console.log(log2);
-    log.mutate({ timeInSeconds: 20, userId: '1' });
-  };
+  const handleClick = () => {};
 
   const handleShiftTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tempTime = addTimeToDate(today, e.target.value);
@@ -265,44 +235,13 @@ const BreakComponent: React.FC<BreakComponentProps> = () => {
         </h1>
         <div>
           <div>
-            <p className="text-center">Shift Times</p>
-            <div className="flex gap-10 mb-10 justify-center">
-              <ShiftTimes date={todayStartTime} label="Start Time" />
-              <ShiftTimes date={todayEndTime} label="End Time" />
-            </div>
+            <ShiftTimes day={today} />
           </div>
           <button className="bg-red-500" onClick={handleClick}>
             Click Me
           </button>
           <div className="flex flex-col items-center justify-start">
             <h3 className="font-bold text-3xl">Break Timer</h3>
-
-            <div className="flex items-center gap-5">
-              <label htmlFor="">Enter break time manually</label>
-              <input
-                type="number"
-                ref={manualBreakRef}
-                min="1"
-                max="60"
-                className="text-black text-center max-w-max rounded-full pl-2"
-              />
-
-              <input
-                type="time"
-                step="360"
-                className="text-black text-center max-w-max rounded-full pl-2"
-              />
-              <button
-                onClick={() => {
-                  if (manualBreakRef.current) {
-                    console.log(manualBreakRef.current.value);
-                  }
-                }}
-                className="rounded-full text-center py-2 px-10 bg-blue-500"
-              >
-                Add break time
-              </button>
-            </div>
 
             <p className="">Break timer --- {formatSecondsForDisplay(timer)}</p>
             <p className="">
@@ -329,13 +268,6 @@ const BreakComponent: React.FC<BreakComponentProps> = () => {
                 RESET
               </button>
             </div>
-          </div>
-          <div className="flex flex-col items-center justify-start">
-            <h3 className="font-bold text-3xl">Enter Manually</h3>
-            <input
-              type="number"
-              className="rounded-full text-center py-2 px-10"
-            />
           </div>
         </div>
       </div>
