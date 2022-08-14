@@ -8,16 +8,7 @@ export interface ChildProps {
   breakTimeLog: BreakTimeLog[];
 }
 
-export default function DisplayTimes(props: ChildProps) {
-  const [breakTimeLog, setBreakTimeLog] = useState<BreakTimeLog[]>(
-    props.breakTimeLog
-  );
-
-  useEffect(() => {
-    console.log('props.BreakTimeLog changed');
-    setBreakTimeLog(props.breakTimeLog);
-  }, [props.breakTimeLog]);
-
+export default function DisplayTimes({ breakTimeLog }: ChildProps) {
   if (!breakTimeLog) {
     return <div>Loading ...</div>;
   }
