@@ -1,8 +1,3 @@
-import { format } from 'date-fns';
-import { AnyNsRecord } from 'dns';
-import { useEffect, useMemo, useState } from 'react';
-import { useTable } from 'react-table';
-import { formatSecondsForDisplay } from '../helpers';
 import type { BreakTimeLog } from '../types';
 import LogRow from './LogRow';
 import TotalBreakTime from './TotalBreakTime';

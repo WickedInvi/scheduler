@@ -1,9 +1,4 @@
-import {
-  differenceInMinutes,
-  differenceInSeconds,
-  format,
-  startOfToday,
-} from 'date-fns';
+import { differenceInSeconds, format, startOfToday } from 'date-fns';
 import React, { useState, useRef, useEffect } from 'react';
 import {
   formatSecondsForDisplay,
@@ -11,8 +6,6 @@ import {
   addTimeToDate,
   classNames,
 } from './helpers';
-
-import { schedule } from './workTimes';
 
 // Components
 import DisplayTimes from './displayTimes/DisplayTimes';
