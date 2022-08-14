@@ -17,7 +17,7 @@ import { isSameDay } from 'date-fns';
 import { schedule } from '@components/breakComponent/workTimes';
 import ShiftTime from './ShiftTime';
 
-export default function ShiftTimes({ day }: ShiftTimesProps) {
+const ShiftTimes = ({ day }: ShiftTimesProps) => {
   const todayWorkTimes: WorkTime | undefined = schedule.workTimes.find(
     (workTime) => isSameDay(workTime.date, day)
   );
@@ -34,4 +34,6 @@ export default function ShiftTimes({ day }: ShiftTimesProps) {
       </div>
     </div>
   );
-}
+};
+
+export default ShiftTimes;
