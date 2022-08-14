@@ -13,12 +13,12 @@ import DisplayTimes from './displayTimes/DisplayTimes';
 // Types
 import type { BreakTimeLog } from './types';
 
-import { trpc } from 'utils/trpc';
 import ShiftTimes from '@components/breakComponent/shiftTimes/ShiftTimes';
+import BreakTimer from './BreakTimer';
 
 interface BreakComponentProps {}
 
-const BreakComponent = () => {
+const BreakComponent = ({}: BreakComponentProps) => {
   const [isActive, setIsActive] = useState<boolean>();
 
   // TODO Use DB for this
@@ -27,9 +27,6 @@ const BreakComponent = () => {
   // Settings
   const minBreakTime = 0;
   let today = startOfToday();
-
-  const [startTime, setStartTime] = useState<Date>();
-  const [endTime, setEndTime] = useState<Date>();
 
   // CURRENT TIME
   const [currentTime, setCurrentTime] = useState<Date>();
@@ -70,6 +67,7 @@ const BreakComponent = () => {
 
   // ON LOAD
   useEffect(() => {
+    // Fixes server side render issue
     setCurrentTime(new Date());
   }, []);
 
@@ -206,15 +204,6 @@ const BreakComponent = () => {
 
   const handleClick = () => {};
 
-  const handleShiftTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const tempTime = addTimeToDate(today, e.target.value);
-
-    addTimeToDate(today, e.target.value);
-
-    if (e.target.id == 'shiftStartTime') setStartTime(tempTime);
-    if (e.target.id == 'shiftEndTime') setEndTime(tempTime);
-  };
-
   if (!currentTime) {
     return <div>Loading...</div>;
   }
@@ -235,12 +224,8 @@ const BreakComponent = () => {
           </button>
           <div className="flex flex-col items-center justify-start">
             <h3 className="font-bold text-xl">Break Timer</h3>
-
-            <p className="">Break timer --- {formatSecondsForDisplay(timer)}</p>
-            <p className="">
-              Time since last break ---{' '}
-              {formatSecondsForDisplay(lastBreakTimer)}
-            </p>
+            <BreakTimer label="Current break" timer={timer} />
+            <BreakTimer label="Time since last break" timer={lastBreakTimer} />
             <div className="flex items-center gap-5">
               <button
                 onClick={handleStartStopClick}
