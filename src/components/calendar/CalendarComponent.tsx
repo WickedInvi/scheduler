@@ -21,7 +21,7 @@ import {
 } from 'react-icons/bs';
 
 interface CalendarProps {}
-const CalendarComponent: React.FC<CalendarProps> = ({}: CalendarProps) => {
+const CalendarComponent = ({}: CalendarProps) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(startOfToday());
 
   let today = startOfToday();

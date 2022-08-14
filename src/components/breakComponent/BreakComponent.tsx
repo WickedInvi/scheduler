@@ -25,7 +25,7 @@ import ShiftTimes from '@components/breakComponent/shiftTimes/ShiftTimes';
 
 interface BreakComponentProps {}
 
-const BreakComponent: React.FC<BreakComponentProps> = () => {
+const BreakComponent = () => {
   const [isActive, setIsActive] = useState<boolean>();
 
   // TODO Use DB for this

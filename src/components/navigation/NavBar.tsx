@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 interface NavBarProps {}
 
-const NavBar: React.FC<NavBarProps> = ({}: NavBarProps) => {
+const NavBar = ({}: NavBarProps) => {
   const navItems = [
     {
       name: 'Home',

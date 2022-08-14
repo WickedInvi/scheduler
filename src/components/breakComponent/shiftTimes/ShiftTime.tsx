@@ -1,14 +1,11 @@
 import { format } from 'date-fns';
 
-interface ShiftTimesProps {
+interface ShiftTimeProps {
   label: string;
   date: Date | number;
 }
 
-const ShiftTimes: React.FC<ShiftTimesProps> = ({
-  label,
-  date,
-}: ShiftTimesProps) => {
+const ShiftTime = ({ label, date }: ShiftTimeProps) => {
   return (
     <div className="flex flex-col items-center">
       <p>{label}</p>
@@ -17,4 +14,4 @@ const ShiftTimes: React.FC<ShiftTimesProps> = ({
   );
 };
 
-export default ShiftTimes;
+export default ShiftTime;
