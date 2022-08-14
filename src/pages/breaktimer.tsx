@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import BreakComponent from '@components/breakComponent/BreakComponent';
 
 const DisplayTimesNoSSR = dynamic(
-  () => import('@components/breakComponent/DisplayTimes'),
+  () => import('@components/breakComponent/displayTimes/DisplayTimes'),
   { ssr: false }
 );
 

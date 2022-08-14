@@ -16,7 +16,7 @@ const StopWatch2NoSSR = dynamic(
   { ssr: false }
 );
 const DisplayTimesNoSSR = dynamic(
-  () => import('@components/breakComponent/DisplayTimes'),
+  () => import('@components/breakComponent/displayTimes/DisplayTimes'),
   { ssr: false }
 );
 

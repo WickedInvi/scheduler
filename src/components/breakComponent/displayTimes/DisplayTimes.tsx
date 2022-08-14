@@ -1,14 +1,18 @@
 import { format } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import { useTable } from 'react-table';
-import { formatSecondsForDisplay } from './helpers';
-import type { BreakTimeLog } from './types';
+import { formatSecondsForDisplay } from '../helpers';
+import type { BreakTimeLog } from '../types';
 
 export interface ChildProps {
   breakTimeLog: BreakTimeLog[];
 }
 
 export default function DisplayTimes({ breakTimeLog }: ChildProps) {
+  const rows = [];
+
+  breakTimeLog.forEach((item) => {});
+
   if (!breakTimeLog) {
     return <div>Loading ...</div>;
   }

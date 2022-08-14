@@ -15,7 +15,7 @@ import {
 import { schedule } from './workTimes';
 
 // Components
-import DisplayTimes from './DisplayTimes';
+import DisplayTimes from './displayTimes/DisplayTimes';
 
 // Types
 import type { BreakTimeLog } from './types';
