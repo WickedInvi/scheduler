@@ -1,3 +1,10 @@
+import { parseDateFromString } from '@components/breakComponent/helpers';
+import { isSameDay } from 'date-fns';
+// Data
+import { schedule } from '@components/breakComponent/workTimes';
+// Components
+import ShiftTime from './ShiftTime';
+
 interface ShiftTimesProps {
   day: Date;
 }
@@ -9,13 +16,6 @@ type WorkTime = {
   end: string;
   dayOff: boolean;
 };
-
-import { parseDateFromString } from '@components/breakComponent/helpers';
-
-import { isSameDay } from 'date-fns';
-
-import { schedule } from '@components/breakComponent/workTimes';
-import ShiftTime from './ShiftTime';
 
 const ShiftTimes = ({ day }: ShiftTimesProps) => {
   const todayWorkTimes: WorkTime | undefined = schedule.workTimes.find(
