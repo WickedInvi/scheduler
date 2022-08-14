@@ -1,17 +1,36 @@
 import { format } from 'date-fns';
+import { AnyNsRecord } from 'dns';
 import { useEffect, useMemo, useState } from 'react';
 import { useTable } from 'react-table';
 import { formatSecondsForDisplay } from '../helpers';
 import type { BreakTimeLog } from '../types';
+import LogRow from './LogRow';
+import TotalBreakTime from './TotalBreakTime';
 
 export interface ChildProps {
   breakTimeLog: BreakTimeLog[];
 }
 
-export default function DisplayTimes({ breakTimeLog }: ChildProps) {
-  const rows = [];
+type LogRow = {
+  id: number;
+  timeOfBreak: Date;
+  timeInSeconds: number;
+};
 
-  breakTimeLog.forEach((item) => {});
+export default function DisplayTimes({ breakTimeLog }: ChildProps) {
+  // TODO Figure out the type of LogRow
+  const rows: any = [];
+
+  breakTimeLog.forEach((item, id) => {
+    return rows.push(
+      <LogRow
+        key={id}
+        id={id}
+        timeOfBreak={item.timeOfBreak}
+        timeInSeconds={item.timeInSeconds}
+      />
+    );
+  });
 
   if (!breakTimeLog) {
     return <div>Loading ...</div>;
@@ -20,6 +39,7 @@ export default function DisplayTimes({ breakTimeLog }: ChildProps) {
   return (
     <>
       <div>
+        <TotalBreakTime breakTimeLog={breakTimeLog} />
         <div className="overflow-x-auto">
           <table className="table w-full table-zebra">
             <thead>
@@ -29,29 +49,7 @@ export default function DisplayTimes({ breakTimeLog }: ChildProps) {
                 <th>Break Length</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th></th>
-                <td>Total Break Time</td>
-                <td>
-                  {formatSecondsForDisplay(
-                    breakTimeLog.reduce(
-                      (prev, curr) => prev + curr.timeInSeconds,
-                      0
-                    )
-                  )}
-                </td>
-              </tr>
-              {breakTimeLog.map((item, id) => {
-                return (
-                  <tr key={id}>
-                    <th>{id + 1}</th>
-                    <td>{format(item.timeOfBreak, 'HH:mm')}</td>
-                    <td>{formatSecondsForDisplay(item.timeInSeconds)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
+            <tbody>{rows}</tbody>
           </table>
         </div>
       </div>
