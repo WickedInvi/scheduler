@@ -223,29 +223,26 @@ const BreakComponent = ({}: BreakComponentProps) => {
             Click Me
           </button>
           <div className="flex flex-col items-center justify-start">
-            <h3 className="font-bold text-xl">Break Timer</h3>
-            <BreakTimer label="Current break" timer={timer} />
-            <BreakTimer label="Time since last break" timer={lastBreakTimer} />
             <div className="flex items-center gap-5">
               <button
                 onClick={handleStartStopClick}
                 disabled={canTakeBreak}
                 className={classNames(
-                  'rounded-full text-center py-2 px-10 bg-green-500',
-                  isActive && 'bg-red-500',
-                  canTakeBreak && 'bg-gray-500'
+                  'btn px-8 btn-success',
+                  isActive && 'btn-error',
+                  canTakeBreak && 'btn-ghost'
                 )}
               >
                 Start
               </button>
 
-              <button
-                onClick={handleReset}
-                className="rounded-full text-center py-2 px-10 bg-red-500"
-              >
+              <button onClick={handleReset} className="btn bg-red-500">
                 RESET
               </button>
             </div>
+            <h3 className="font-bold text-xl">Break Timer</h3>
+            <BreakTimer label="Current break" timer={timer} />
+            <BreakTimer label="Time since last break" timer={lastBreakTimer} />
           </div>
         </div>
       </div>
