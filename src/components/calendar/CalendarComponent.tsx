@@ -25,7 +25,7 @@ const CalendarComponent = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center gap-5">
+    <div className="w-full flex flex-col items-center justify-center gap-5 pb-10">
       <div>
         <div className="flex justify-between items-center">
           <h3> Display days of the month</h3>
