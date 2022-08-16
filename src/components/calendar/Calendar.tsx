@@ -6,7 +6,7 @@ import {
   startOfWeek,
 } from 'date-fns';
 import { useEffect, useState } from 'react';
-import Day from './Day/Day';
+import Day from './day/Day';
 
 interface CalendarProps {
   currentMonth: Date;
@@ -34,7 +34,7 @@ const Calendar = ({ currentMonth, showOtherDays }: CalendarProps) => {
   }, [showOtherDays, currentMonth]);
 
   return (
-    <div className="grid grid-cols-7 grid-rows-5 max-w-[1280px] border-[1px] border-red-500">
+    <div className="grid grid-cols-7 grid-rows-5 max-w-[1280px] border-[1px]">
       {days.map((day, id) => {
         return (
           <Day day={day} key={id} id={id} startOfMonth={currentMonthStart} />
