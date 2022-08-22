@@ -1,3 +1,4 @@
+import Clock from '@components/Clock';
 import Link from 'next/link';
 
 interface NavBarProps {}
@@ -27,15 +28,17 @@ const NavBar = ({}: NavBarProps) => {
       </p>
     </Link>
   ));
+
   return (
     <div className="fixed top-0 left-0 right-0 bg-blue-500 flex justify-center">
-      <div className="navbar max-w-5xl">
-        <div className="flex-1">
+      <div className="navbar max-w-5xl flex justify-between">
+        <div className="">
           <span className="btn btn-ghost normal-case text-xl">
             <Link href={'/'}>{companyName}</Link>
           </span>
         </div>
-        <div className="flex-none">
+        <Clock></Clock>
+        <div className="">
           <ul className="menu menu-horizontal p-0 flex gap-5">{navLinks}</ul>
         </div>
       </div>

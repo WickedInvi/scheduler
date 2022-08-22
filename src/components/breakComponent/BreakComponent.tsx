@@ -207,14 +207,10 @@ const BreakComponent = ({}: BreakComponentProps) => {
   if (!currentTime) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="flex flex-col md:flex-row gap-10 border-2">
       <div>
-        <h1 className="select-none text-5xl text-center">
-          Current Time
-          <br />
-          {format(currentTime, 'HH:mm:ss')}
-        </h1>
         <div>
           <div>
             <ShiftTimes day={today} />
